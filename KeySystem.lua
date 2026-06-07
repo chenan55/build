@@ -1,107 +1,53 @@
---// XOR DECODE ENGINE
-local function _x(s,k)
-    local r = {}
-    for i = 1, #s do
-        r[i] = string.char(bit32.bxor(s:byte(i), k))
-    end
-    return table.concat(r)
-end
-
---// ENCRYPTED KEYS (XOR 23)
-local _raw = {
-    "\111\121\118\120\119\120",
-    "\110\120\121\121\117\118",
-    "\97\99\100\99\98\97",
-    "\116\115\114\113\112\111",
-    "\88\89\90\91\92\93"
-}
-
-local _keys = {}
-for i = 1, #_raw do
-    _keys[_x(_raw[i],23)] = true
-end
-
---// ENCRYPTED URL (XOR 7)
-local _u_enc = "\25\30\29\29\24\93\... (dipendekin biar gak kepanjangan)"
-
-local _url = _x(_u_enc,7)
-
---// FAKE LAYER (noise function)
-local function _noise()
-    local a = math.random(1,999)
-    if a > 1000 then
-        return "deadcode"
-    end
-end
-
---// UI CORE (disamarkan)
-local g = game:GetService("CoreGui")
-
-local s = Instance.new("ScreenGui")
-s.Name = tostring(math.random(1000,9999))
-s.Parent = g
-
-local f = Instance.new("Frame")
-f.Parent = s
-f.Size = UDim2.new(0,280,0,180)
-f.Position = UDim2.new(0.5,-140,0.5,-90)
-f.BackgroundColor3 = Color3.fromRGB(15,15,15)
-
-Instance.new("UICorner", f).CornerRadius = UDim.new(0,10)
-
-local i = Instance.new("TextBox", f)
-i.Size = UDim2.new(0,240,0,40)
-i.Position = UDim2.new(0.5,-120,0.4,0)
-
-local b = Instance.new("TextButton", f)
-b.Size = UDim2.new(0,240,0,40)
-b.Position = UDim2.new(0.5,-120,0.75,0)
-b.Text = "VERIFY"
-
---// CONTROL FLOW OBFUSCATION
-local function _check(k)
-    _noise()
-
-    local state = false
-
-    repeat
-        for key, _ in pairs(_keys) do
-            if k == key then
-                state = true
-                break
-            end
-        end
-        break
-    until true
-
-    return state
-end
-
---// MAIN EXECUTION (hidden flow)
-local function _main()
-    b.Text = "CHECKING..."
-    task.wait(0.6)
-
-    if _check(i.Text) then
-
-        local a = function()
-            return pcall(function()
-                return loadstring(game:HttpGet(_url))()
-            end)
-        end
-
-        b.Text = "SUCCESS"
-        task.wait(0.4)
-
-        s:Destroy()
-        a()
-
-    else
-        b.Text = "INVALID"
-        task.wait(1)
-        b.Text = "VERIFY"
-    end
-end
-
---// EVENT HOOK (disamarkan)
-b["MouseButton1Click"]:Connect(_main)
+‎-- // CONFIGURASI
+‎local ValidKeys = {["387382"]=true, ["388293"]=true, ["546431"]=true, ["491549"]=true, ["837293"]=true}
+‎local ScriptUtama = "https://raw.githubusercontent.com/chenan55/build/refs/heads/main/by%20chenan"
+‎
+‎-- // SETUP UI MODERN
+‎local ScreenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
+‎ScreenGui.Name = "SecureKey"
+‎local Frame = Instance.new("Frame", ScreenGui)
+‎Frame.Size = UDim2.new(0, 280, 0, 180); Frame.Position = UDim2.new(0.5, -140, 0.5, -90)
+‎Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20); Frame.BorderSizePixel = 0
+‎Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 12)
+‎
+‎local Title = Instance.new("TextLabel", Frame)
+‎Title.Size = UDim2.new(1, 0, 0, 40); Title.Text = "AUTHENTICATION"; Title.TextColor3 = Color3.new(1,1,1)
+‎Title.Font = Enum.Font.GothamBold; Title.BackgroundTransparency = 1
+‎
+‎local Input = Instance.new("TextBox", Frame)
+‎Input.Size = UDim2.new(0, 240, 0, 40); Input.Position = UDim2.new(0.5, -120, 0.4, 0)
+‎Input.BackgroundColor3 = Color3.fromRGB(40, 40, 40); Input.PlaceholderText = "Masukkan Key..."
+‎Input.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", Input).CornerRadius = UDim.new(0, 6)
+‎
+‎local Btn = Instance.new("TextButton", Frame)
+‎Btn.Size = UDim2.new(0, 240, 0, 40); Btn.Position = UDim2.new(0.5, -120, 0.75, 0)
+‎Btn.Text = "VERIFIKASI"; Btn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+‎Btn.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", Btn).CornerRadius = UDim.new(0, 6)
+‎
+‎-- // LOGIKA ANTI-BOBOL
+‎Btn.MouseButton1Click:Connect(function()
+‎    Btn.Text = "Memeriksa..."
+‎    task.wait(0.8)
+‎    
+‎    if ValidKeys[Input.Text] then
+‎        Btn.Text = "BERHASIL!"
+‎        Btn.BackgroundColor3 = Color3.fromRGB(0, 180, 0)
+‎        
+‎        -- Efek Fade out sebelum menghilang
+‎        for i = 1, 0, -0.1 do
+‎            Frame.BackgroundTransparency = 1 - i
+‎            task.wait(0.05)
+‎        end
+‎        
+‎        ScreenGui:Destroy()
+‎        local success, result = pcall(function() return loadstring(game:HttpGet(ScriptUtama))() end)
+‎        if not success then warn("Gagal memuat skrip utama: " .. tostring(result)) end
+‎    else
+‎        Btn.Text = "KEY SALAH!"
+‎        Btn.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
+‎        task.wait(1.5)
+‎        Btn.Text = "VERIFIKASI"
+‎        Btn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+‎    end
+‎end)
+‎
