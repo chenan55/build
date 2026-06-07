@@ -1,34 +1,52 @@
--- // Konfigurasi
+-- // CONFIGURASI
 local ValidKeys = {["387382"]=true, ["388293"]=true, ["546431"]=true, ["491549"]=true, ["837293"]=true}
 local ScriptUtama = "https://raw.githubusercontent.com/chenan55/build/refs/heads/main/by%20chenan"
 
--- // Membuat UI Utama
-local UI = Instance.new("ScreenGui", game.CoreGui)
-local MainFrame = Instance.new("Frame", UI); MainFrame.Size = UDim2.new(0, 250, 0, 150); MainFrame.Position = UDim2.new(0.5, -125, 0.5, -75); MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30); MainFrame.Active = true; MainFrame.Draggable = true
-Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 10)
+-- // SETUP UI MODERN
+local ScreenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
+ScreenGui.Name = "SecureKey"
+local Frame = Instance.new("Frame", ScreenGui)
+Frame.Size = UDim2.new(0, 280, 0, 180); Frame.Position = UDim2.new(0.5, -140, 0.5, -90)
+Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20); Frame.BorderSizePixel = 0
+Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 12)
 
--- // Input Box
-local Box = Instance.new("TextBox", MainFrame); Box.Size = UDim2.new(0, 210, 0, 40); Box.Position = UDim2.new(0.5, -105, 0.3, 0); Box.PlaceholderText = "Masukkan Key..."; Box.BackgroundColor3 = Color3.fromRGB(45, 45, 45); Box.TextColor3 = Color3.new(1,1,1); Box.Font = Enum.Font.Gotham; Box.Text = ""
-Instance.new("UICorner", Box).CornerRadius = UDim.new(0, 6)
+local Title = Instance.new("TextLabel", Frame)
+Title.Size = UDim2.new(1, 0, 0, 40); Title.Text = "AUTHENTICATION"; Title.TextColor3 = Color3.new(1,1,1)
+Title.Font = Enum.Font.GothamBold; Title.BackgroundTransparency = 1
 
--- // Tombol Login
-local Btn = Instance.new("TextButton", MainFrame); Btn.Size = UDim2.new(0, 210, 0, 40); Btn.Position = UDim2.new(0.5, -105, 0.7, 0); Btn.Text = "LOGIN"; Btn.BackgroundColor3 = Color3.fromRGB(0, 150, 255); Btn.TextColor3 = Color3.new(1,1,1); Btn.Font = Enum.Font.GothamBold
-Instance.new("UICorner", Btn).CornerRadius = UDim.new(0, 6)
+local Input = Instance.new("TextBox", Frame)
+Input.Size = UDim2.new(0, 240, 0, 40); Input.Position = UDim2.new(0.5, -120, 0.4, 0)
+Input.BackgroundColor3 = Color3.fromRGB(40, 40, 40); Input.PlaceholderText = "Masukkan Key..."
+Input.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", Input).CornerRadius = UDim.new(0, 6)
 
--- // Logika & Feedback
+local Btn = Instance.new("TextButton", Frame)
+Btn.Size = UDim2.new(0, 240, 0, 40); Btn.Position = UDim2.new(0.5, -120, 0.75, 0)
+Btn.Text = "VERIFIKASI"; Btn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
+Btn.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", Btn).CornerRadius = UDim.new(0, 6)
+
+-- // LOGIKA ANTI-BOBOL
 Btn.MouseButton1Click:Connect(function()
-    if ValidKeys[Box.Text] then
-        Btn.Text = "SUCCESS!"
-        Btn.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
-        task.wait(0.5)
-        UI:Destroy()
-        loadstring(game:HttpGet(ScriptUtama))()
+    Btn.Text = "Memeriksa..."
+    task.wait(0.8)
+    
+    if ValidKeys[Input.Text] then
+        Btn.Text = "BERHASIL!"
+        Btn.BackgroundColor3 = Color3.fromRGB(0, 180, 0)
+        
+        -- Efek Fade out sebelum menghilang
+        for i = 1, 0, -0.1 do
+            Frame.BackgroundTransparency = 1 - i
+            task.wait(0.05)
+        end
+        
+        ScreenGui:Destroy()
+        local success, result = pcall(function() return loadstring(game:HttpGet(ScriptUtama))() end)
+        if not success then warn("Gagal memuat skrip utama: " .. tostring(result)) end
     else
-        Box.Text = "KEY SALAH!"
-        Btn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-        task.wait(1)
-        Box.Text = ""
-        Btn.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
-        Btn.Text = "LOGIN"
+        Btn.Text = "KEY SALAH!"
+        Btn.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
+        task.wait(1.5)
+        Btn.Text = "VERIFIKASI"
+        Btn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
     end
 end)
