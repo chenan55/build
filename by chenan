@@ -1,0 +1,469 @@
+-- ==========================================
+-- ROBLOX VISUAL ASSET SPAWNER V8.5
+-- + COMPACT MOBILE UI OPTIMIZED (Rapat & Pendek)
+-- + SLOT DELETE MANAGEMENT & CONFIRMATION
+-- + SLIDER SCALE CONTROLLER
+-- ==========================================
+
+local player = game.Players.LocalPlayer
+local coreGui = game:GetService("CoreGui") or player:WaitForChild("PlayerGui")
+local Camera = workspace.CurrentCamera
+local HttpService = game:GetService("HttpService")
+local UserInputService = game:GetService("UserInputService")
+
+local assetList = {
+    -- KELOMPOK MASJID
+    {Name = "Masjid 1", ID = "6810419454", Category = "Masjid"}, {Name = "Masjid 2", ID = "3012531893", Category = "Masjid"},
+    {Name = "Masjid 3", ID = "85911094510771", Category = "Masjid"}, {Name = "Masjid 4", ID = "99865027714237", Category = "Masjid"},
+    {Name = "Masjid 5", ID = "5534205372", Category = "Masjid"}, {Name = "Masjid 6", ID = "17478211398", Category = "Masjid"},
+    {Name = "Masjid 7", ID = "4989149646", Category = "Masjid"}, {Name = "Masjid 8", ID = "6554977614", Category = "Masjid"},
+    {Name = "Masjid 9", ID = "167190567", Category = "Masjid"},
+
+    -- KELOMPOK ITEMS -> Kategori "Items"
+    {Name = "balok", ID = "11655783487", Category = "Items"},
+    {Name = "kursi meja1", ID = "223168706", Category = "Items"},
+    {Name = "kursi meja2", ID = "80365237076656", Category = "Items"},
+    {Name = "cermin1", ID = "18640709608", Category = "Items"},
+    {Name = "cermin2", ID = "10672885006", Category = "Items"},
+    {Name = "motif1", ID = "100748174515533", Category = "Items"},
+    {Name = "motif2", ID = "3482943003", Category = "Items"},
+    {Name = "motif3", ID = "11789484999", Category = "Items"},
+    {Name = "platform", ID = "16435824472", Category = "Items"},
+    {Name = "meja", ID = "80365237076656", Category = "Items"},
+    {Name = "tv", ID = "10673384641", Category = "Items"},
+    {Name = "kayu", ID = "82259310114489", Category = "Items"},
+    {Name = "kayu2", ID = "40954684", Category = "Items"},
+    {Name = "kayu3", ID = "244501220", Category = "Items"},
+    {Name = "balok1", ID = "14215576529", Category = "Items"},
+    {Name = "balok2", ID = "5073712", Category = "Items"},
+    {Name = "tanaman1", ID = "14788911812", Category = "Items"},
+    {Name = "tanaman2", ID = "2171213658", Category = "Items"},
+    {Name = "tanaman3", ID = "5502224478", Category = "Items"},
+    {Name = "bunga1", ID = "5569745108", Category = "Items"},
+    {Name = "bunga2", ID = "15332716477", Category = "Items"},
+    {Name = "kamar mandi", ID = "101943142166137", Category = "Items"},
+    {Name = "kardus", ID = "9614942818", Category = "Items"},
+    {Name = "dapur", ID = "81035323200698", Category = "Items"},
+    {Name = "lampu 1", ID = "11491722041", Category = "Items"},
+    {Name = "lampu 2", ID = "8082935990", Category = "Items"},
+    {Name = "lampu 3", ID = "16584437073", Category = "Items"},
+    {Name = "meteran listrik", ID = "1412351244", Category = "Items"},
+    {Name = "Rear Spoiler1", ID = "4822008534", Category = "Items"},
+    {Name = "Rear Spoiler2", ID = "10299211492", Category = "Items"},
+    {Name = "tenda", ID = "95334025", Category = "Items"},
+    {Name = "radio", ID = "16913349405", Category = "Items"},
+    {Name = "kursi kaca", ID = "2325973998", Category = "Items"},
+    {Name = "kursi kaca2", ID = "23983987", Category = "Items"},
+    {Name = "kursi kaca3", ID = "81376240", Category = "Items"},
+    {Name = "sofa", ID = "77424644415906", Category = "Items"},
+    {Name = "sofa2", ID = "12965538391", Category = "Items"},
+    {Name = "sofa3", ID = "75692201599353", Category = "Items"},
+    {Name = "sofa4", ID = "11858202164", Category = "Items"},
+    {Name = "ayunan", ID = "5285812212", Category = "Items"},
+    {Name = "boneka", ID = "5524438142", Category = "Items"},
+    {Name = "boneka 2", ID = "8560939634", Category = "Items"},
+    {Name = "meja kaca", ID = "4475449052", Category = "Items"},
+    {Name = "kaca panjang", ID = "3613762400", Category = "Items"},
+    {Name = "speaker1", ID = "13024898957", Category = "Items"},
+    {Name = "speaker2", ID = "229080736", Category = "Items"},
+    {Name = "aquarium", ID = "1822238593", Category = "Items"},
+    {Name = "pohon pisang", ID = "13437819237", Category = "Items"},
+    {Name = "pohon2", ID = "530766380", Category = "Items"},
+
+    -- Bangunan Original & Kota -> Kategori "Gedung"
+    {Name = "Bangunan 1", ID = "95328463271667", Category = "Gedung"}, {Name = "Bangunan 2", ID = "14731623994", Category = "Gedung"},
+    {Name = "Bangunan 3", ID = "11060633677", Category = "Gedung"}, {Name = "Bangunan 4", ID = "12143547490", Category = "Gedung"}, 
+    {Name = "Bangunan 5", ID = "13854749583", Category = "Gedung"}, {Name = "Bangunan 6", ID = "18902234051", Category = "Gedung"},
+    {Name = "Bangunan 7", ID = "9032369016", Category = "Gedung"}, {Name = "Bangunan 8", ID = "9676302649", Category = "Gedung"},
+    {Name = "Bangunan 9", ID = "89334519773324", Category = "Gedung"}, {Name = "Bangunan 10", ID = "2799652039", Category = "Gedung"},
+    {Name = "Bangunan 11", ID = "4928101363", Category = "Gedung"}, {Name = "Bangunan 12", ID = "131032396910677", Category = "Gedung"},
+    {Name = "Bangunan 13", ID = "15823512019", Category = "Gedung"}, {Name = "Bangunan 14", ID = "90366969155006", Category = "Gedung"},
+    {Name = "Bangunan 15", ID = "20886822", Category = "Gedung"}, {Name = "Bangunan 16", ID = "8483659966", Category = "Gedung"},
+    {Name = "Bangunan 17", ID = "13156629984", Category = "Gedung"}, {Name = "Bangunan 18", ID = "94226889541727", Category = "Gedung"},
+    {Name = "Bangunan 19", ID = "15584054213", Category = "Gedung"}, {Name = "Bangunan 20", ID = "10330844776", Category = "Gedung"},
+    {Name = "new york", ID = "7130185320", Category = "Gedung"}, {Name = "kota", ID = "10976110724", Category = "Gedung"},
+    {Name = "struktur kota", ID = "2016622640", Category = "Gedung"}, {Name = "gedung kota", ID = "11963318908", Category = "Gedung"},
+    {Name = "gedung", ID = "11410874481", Category = "Gedung"}, {Name = "gedung", ID = "12167498021", Category = "Gedung"},
+    {Name = "gedung bazhard", ID = "11475423490", Category = "Gedung"}, {Name = "kompleks gedung", ID = "1151728216", Category = "Gedung"},
+    {Name = "apartemen", ID = "11060633677", Category = "Gedung"}, {Name = "sekolah1", ID = "4893502792", Category = "Gedung"},
+    {Name = "sekolah2", ID = "16325692519", Category = "Gedung"}, {Name = "motel", ID = "2292364", Category = "Gedung"},
+    {Name = "hotel", ID = "14890876654", Category = "Gedung"}, {Name = "perpustakaan", ID = "5596386522", Category = "Gedung"},
+    {Name = "pusat resains", ID = "6154077644", Category = "Gedung"}, {Name = "stadion", ID = "4807728287", Category = "Gedung"},
+    
+    -- KELOMPOK PESAWAT & KENDARAAN -> Kategori "Kendaraan"
+    {Name = "pesawat", ID = "5032786420", Category = "Kendaraan"}, {Name = "pesawat airbus", ID = "10828109856", Category = "Kendaraan"},
+    {Name = "pesawat tempur", ID = "163679132", Category = "Kendaraan"}, {Name = "bomber", ID = "4735054708", Category = "Kendaraan"},
+    {Name = "jet", ID = "80035747745904", Category = "Kendaraan"}, {Name = "ekskavator", ID = "9028664826", Category = "Kendaraan"},
+    {Name = "mobil1", ID = "10219147767", Category= "Kendaraan"}, 
+    
+    -- KELOMPOK KAPAL LAUT -> Kategori "Kapal"
+    {Name = "kapal pesiar kecil", ID = "12209907499", Category = "Kapal"}, {Name = "kapal pesiar besar", ID = "9358736830", Category = "Kapal"},
+    {Name = "kapal pesiar mewah", ID = "58487077", Category = "Kapal"}, {Name = "kapal pesiar", ID = "14461111692", Category = "Kapal"},
+    {Name = "kapal kotak", ID = "13852654755", Category = "Kapal"}, {Name = "kapal induk", ID = "282793216", Category = "Kapal"},
+    {Name = "kapal induk", ID = "8362454477", Category = "Kapal"}, {Name = "kapal", ID = "14795929106", Category = "Kapal"},
+
+    -- KELOMPOK RUMAH, MONUMEN & LAINNYA -> Kategori "Monumen"
+    {Name = "Prambanan", ID = "6953878", Category = "Monumen"}, {Name = "tembok china", ID = "333879260", Category = "Monumen"},
+    {Name = "tugu", ID = "377896878", Category = "Monumen"}, {Name = "gerbang", ID = "22908211", Category = "Monumen"},
+    {Name = "tahta", ID = "10782792190", Category = "Monumen"}, {Name = "patung kotak", ID = "10782792190", Category = "Monumen"},
+    {Name = "rumah mewah", ID = "17326127841", Category = "Monumen"}, {Name = "rumah mewah", ID = "76709767466056", Category = "Monumen"}
+}
+
+local categoriesList = {"Semua", "Masjid", "Items", "Gedung", "Kendaraan", "Kapal", "Monumen"}
+
+local spawnedObjects = {} 
+local previewModel, lastSelectedModel = nil, nil
+local isMinimized = false
+local selectedButton = nil
+local activeCategoryTab = nil
+local actionType = ""
+local currentItemID = ""
+
+if coreGui:FindFirstChild("VisualSpawnerGUI") then coreGui.VisualSpawnerGUI:Destroy() end
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "VisualSpawnerGUI"; ScreenGui.Parent = coreGui
+
+local MainFrame = Instance.new("Frame")
+-- Ukuran MainFrame Dikecilkan & Dipadatkan untuk Android (Tinggi hanya 320)
+MainFrame.Size = UDim2.new(0, 240, 0, 320) 
+MainFrame.Position = UDim2.new(0.5, -120, 0.5, -160)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15); MainFrame.BackgroundTransparency = 0.4
+MainFrame.Active, MainFrame.Draggable = true, true; MainFrame.Parent = ScreenGui
+
+local TopBar = Instance.new("Frame")
+TopBar.Size = UDim2.new(1, 0, 0, 25); TopBar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+TopBar.BackgroundTransparency = 0.3; TopBar.Parent = MainFrame
+
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, -60, 1, 0); Title.Position = UDim2.new(0, 8, 0, 0)
+Title.BackgroundTransparency = 1; Title.Text = "Script By Chee_nan •follow tiktok•"; Title.TextColor3 = Color3.new(1,1,1)
+Title.Font = Enum.Font.GothamBold; Title.TextSize = 9; Title.TextXAlignment = Enum.TextXAlignment.Left; Title.Parent = TopBar
+
+local function createBtn(txt, pos, size, parent, color)
+    local b = Instance.new("TextButton")
+    b.Size, b.Position = size, pos
+    b.BackgroundColor3 = color or Color3.fromRGB(40, 40, 40); b.BackgroundTransparency = 0.3
+    b.Text, b.TextColor3, b.Font, b.TextSize = txt, Color3.new(1,1,1), Enum.Font.GothamBold, 8
+    b.Parent = parent; local c = Instance.new("UICorner"); c.CornerRadius = UDim.new(0, 3); c.Parent = b
+    return b
+end
+
+local MinBtn = createBtn("-", UDim2.new(1, -50, 0, 0), UDim2.new(0, 25, 1, 0), TopBar, Color3.fromRGB(50,50,50))
+local CloseBtn = createBtn("X", UDim2.new(1, -25, 0, 0), UDim2.new(0, 25, 1, 0), TopBar, Color3.fromRGB(80, 20, 20))
+
+local TabMenu = Instance.new("ScrollingFrame")
+TabMenu.Size = UDim2.new(1, -10, 0, 25); TabMenu.Position = UDim2.new(0, 5, 0, 28)
+TabMenu.BackgroundColor3 = Color3.fromRGB(15, 15, 15); TabMenu.BackgroundTransparency = 1
+TabMenu.ScrollBarThickness = 0; TabMenu.ScrollingDirection = Enum.ScrollingDirection.X
+TabMenu.CanvasSize = UDim2.new(0, #categoriesList * 65, 0, 0); TabMenu.Parent = MainFrame
+
+local TabListLayout = Instance.new("UIListLayout"); TabListLayout.Padding = UDim.new(0, 5)
+TabListLayout.FillDirection = Enum.FillDirection.Horizontal; TabListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+TabListLayout.Parent = TabMenu
+
+local ScrollFrame = Instance.new("ScrollingFrame")
+-- ScrollFrame Tinggi Dikurangi agar hemat tempat
+ScrollFrame.Size = UDim2.new(1, 0, 0, 75); ScrollFrame.Position = UDim2.new(0, 0, 0, 55)
+ScrollFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15); ScrollFrame.BackgroundTransparency = 0.6
+ScrollFrame.ScrollBarThickness = 2; ScrollFrame.Parent = MainFrame
+
+local UIList = Instance.new("UIListLayout"); UIList.Padding = UDim.new(0, 3)
+UIList.HorizontalAlignment = Enum.HorizontalAlignment.Center; UIList.Parent = ScrollFrame
+
+local ControlPanel = Instance.new("Frame")
+-- Posisi Control Panel dinaikkan ke atas
+ControlPanel.Size = UDim2.new(1, 0, 1, -132); ControlPanel.Position = UDim2.new(0, 0, 0, 132)
+ControlPanel.BackgroundTransparency = 1; ControlPanel.Parent = MainFrame
+
+-- MENU SLOT UTAMA
+local SlotMenu = Instance.new("Frame")
+SlotMenu.Size = UDim2.new(1, 0, 1, -25); SlotMenu.Position = UDim2.new(0, 0, 0, 25)
+SlotMenu.BackgroundColor3 = Color3.fromRGB(15, 15, 15); SlotMenu.BackgroundTransparency = 0.1
+SlotMenu.Visible = false; SlotMenu.ZIndex = 5; SlotMenu.Parent = MainFrame
+
+local SlotTitle = Instance.new("TextLabel")
+SlotTitle.Size = UDim2.new(1, 0, 0, 30); SlotTitle.Position = UDim2.new(0, 0, 0, 10)
+SlotTitle.BackgroundTransparency = 1; SlotTitle.TextColor3 = Color3.new(1, 0.8, 0)
+SlotTitle.Font = Enum.Font.GothamBold; SlotTitle.TextSize = 11; SlotTitle.ZIndex = 6; SlotTitle.Parent = SlotMenu
+
+-- PANEL KONFIRMASI HAPUS
+local ConfirmMenu = Instance.new("Frame")
+ConfirmMenu.Size = UDim2.new(1, 0, 1, -25); ConfirmMenu.Position = UDim2.new(0, 0, 0, 25)
+ConfirmMenu.BackgroundColor3 = Color3.fromRGB(20, 10, 10); ConfirmMenu.BackgroundTransparency = 0.1
+ConfirmMenu.Visible = false; ConfirmMenu.ZIndex = 7; ConfirmMenu.Parent = MainFrame
+
+local ConfirmTitle = Instance.new("TextLabel")
+ConfirmTitle.Size = UDim2.new(1, 0, 0, 30); ConfirmTitle.Position = UDim2.new(0, 0, 0, 80)
+ConfirmTitle.BackgroundTransparency = 1; ConfirmTitle.TextColor3 = Color3.new(1, 0.3, 0.3)
+ConfirmTitle.Font = Enum.Font.GothamBold; ConfirmTitle.TextSize = 10; ConfirmTitle.ZIndex = 8; ConfirmTitle.Parent = ConfirmMenu
+
+local BtnBatal = createBtn("BATAL", UDim2.new(0.1, 0, 0, 120), UDim2.new(0.35, 0, 0, 30), ConfirmMenu, Color3.fromRGB(60, 60, 60))
+BtnBatal.ZIndex = 8
+local BtnHapus = createBtn("HAPUS", UDim2.new(0.55, 0, 0, 120), UDim2.new(0.35, 0, 0, 30), ConfirmMenu, Color3.fromRGB(180, 40, 40))
+BtnHapus.ZIndex = 8
+
+local slotBtns = {}
+local targetDeleteSlot = 0
+
+for i = 1, 4 do
+    local btn = createBtn("SLOT " .. i, UDim2.new(0.1, 0, 0, 20 + (i*35)), UDim2.new(0.63, 0, 0, 25), SlotMenu, Color3.fromRGB(40, 50, 60))
+    btn.ZIndex = 6; slotBtns[i] = btn
+    
+    local delBtn = createBtn("🗑", UDim2.new(0.75, 0, 0, 20 + (i*35)), UDim2.new(0.15, 0, 0, 25), SlotMenu, Color3.fromRGB(150, 40, 40))
+    delBtn.ZIndex = 6; delBtn.TextSize = 12
+    
+    delBtn.MouseButton1Click:Connect(function()
+        targetDeleteSlot = i
+        ConfirmTitle.Text = "YAKIN HAPUS MAP SLOT " .. i .. "?"
+        SlotMenu.Visible = false
+        ConfirmMenu.Visible = true
+    end)
+end
+
+local CancelSlotBtn = createBtn("CANCEL", UDim2.new(0.1, 0, 0, 180), UDim2.new(0.8, 0, 0, 25), SlotMenu, Color3.fromRGB(100, 30, 30))
+CancelSlotBtn.ZIndex = 6
+
+BtnBatal.MouseButton1Click:Connect(function() ConfirmMenu.Visible = false; SlotMenu.Visible = true end)
+BtnHapus.MouseButton1Click:Connect(function()
+    local slotFileName = "ArchitectSave_" .. game.PlaceId .. "_Slot" .. targetDeleteSlot .. ".json"
+    if isfile and isfile(slotFileName) then pcall(function() delfile(slotFileName) end) end
+    ConfirmTitle.Text = "SLOT " .. targetDeleteSlot .. " TERHAPUS!"
+    BtnBatal.Visible, BtnHapus.Visible = false, false
+    task.wait(1.5)
+    BtnBatal.Visible, BtnHapus.Visible = true, true
+    ConfirmMenu.Visible, SlotMenu.Visible = false, true
+end)
+
+-- POSISI ABSOLUT UNTUK MENGHINDARI TUMPANG TINDIH
+local SaveBtn = createBtn("SIMPAN MAP", UDim2.new(0.03, 0, 0, 2), UDim2.new(0.45, 0, 0, 20), ControlPanel, Color3.fromRGB(100, 80, 20))
+local LoadBtn = createBtn("FILE MAP KAMU", UDim2.new(0.52, 0, 0, 2), UDim2.new(0.45, 0, 0, 20), ControlPanel, Color3.fromRGB(20, 80, 100))
+LoadBtn.TextSize = 7; SaveBtn.TextSize = 7
+
+------------------------------------------------
+-- SLIDER UKURAN ITEMS (Dibuat Pas)
+------------------------------------------------
+local SliderLabel = Instance.new("TextLabel")
+SliderLabel.Size = UDim2.new(0.94, 0, 0, 12); SliderLabel.Position = UDim2.new(0.03, 0, 0, 24)
+SliderLabel.BackgroundTransparency = 1; SliderLabel.Text = "Ukuran Items: 1.0x"
+SliderLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+SliderLabel.Font = Enum.Font.GothamBold; SliderLabel.TextSize = 8; SliderLabel.Parent = ControlPanel
+
+local SliderBG = Instance.new("Frame")
+SliderBG.Size = UDim2.new(0.94, 0, 0, 10); SliderBG.Position = UDim2.new(0.03, 0, 0, 37)
+SliderBG.BackgroundColor3 = Color3.fromRGB(30, 30, 30); SliderBG.BorderSizePixel = 0; SliderBG.Parent = ControlPanel
+local bgCorner = Instance.new("UICorner"); bgCorner.CornerRadius = UDim.new(1, 0); bgCorner.Parent = SliderBG
+
+local SliderFill = Instance.new("Frame")
+SliderFill.Size = UDim2.new(0.183, 0, 1, 0); SliderFill.BackgroundColor3 = Color3.fromRGB(80, 150, 200)
+SliderFill.BorderSizePixel = 0; SliderFill.Parent = SliderBG
+local fillCorner = Instance.new("UICorner"); fillCorner.CornerRadius = UDim.new(1, 0); fillCorner.Parent = SliderFill
+
+local SliderKnob = Instance.new("TextButton")
+SliderKnob.Size = UDim2.new(0, 14, 0, 14); SliderKnob.Position = UDim2.new(0.183, -7, 0.5, -7)
+SliderKnob.BackgroundColor3 = Color3.fromRGB(220, 220, 220); SliderKnob.Text = ""; SliderKnob.Parent = SliderBG
+local knobCorner = Instance.new("UICorner"); knobCorner.CornerRadius = UDim.new(1, 0); knobCorner.Parent = SliderKnob
+
+local draggingSlider = false; local minScale, maxScale, currentScale = 0.1, 5.0, 1.0
+
+local function updateSlider(input)
+    local posX = math.clamp(input.Position.X - SliderBG.AbsolutePosition.X, 0, SliderBG.AbsoluteSize.X)
+    local percent = posX / SliderBG.AbsoluteSize.X
+    SliderKnob.Position = UDim2.new(percent, -7, 0.5, -7); SliderFill.Size = UDim2.new(percent, 0, 1, 0)
+    currentScale = minScale + (percent * (maxScale - minScale))
+    currentScale = math.round(currentScale * 10) / 10
+    SliderLabel.Text = "Ukuran Items: " .. currentScale .. "x"
+    local target = previewModel or lastSelectedModel; if target then target:ScaleTo(currentScale) end
+end
+
+SliderKnob.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then draggingSlider = true end end)
+SliderBG.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then draggingSlider = true; updateSlider(input) end end)
+UserInputService.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then draggingSlider = false end end)
+UserInputService.InputChanged:Connect(function(input) if draggingSlider and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then updateSlider(input) end end)
+
+local function resetSliderTo(scaleVal)
+    currentScale = scaleVal; local percent = (scaleVal - minScale) / (maxScale - minScale)
+    SliderKnob.Position = UDim2.new(percent, -7, 0.5, -7); SliderFill.Size = UDim2.new(percent, 0, 1, 0)
+    SliderLabel.Text = "Ukuran Items: " .. currentScale .. "x"
+end
+------------------------------------------------
+
+local PlaceBtn = createBtn("PASANG", UDim2.new(0.03, 0, 0, 50), UDim2.new(0.94, 0, 0, 22), ControlPanel, Color3.fromRGB(30, 100, 30))
+PlaceBtn.Visible = false
+
+-- KONTROL PERGERAKAN (DIBUAT GRID 3 KOLOM AGAR PADAT)
+local FwdBtn = createBtn("MAJU", UDim2.new(0.03, 0, 0, 75), UDim2.new(0.3, 0, 0, 22), ControlPanel, Color3.fromRGB(40, 60, 80))
+local ObjUp = createBtn("▲ NAIK", UDim2.new(0.35, 0, 0, 75), UDim2.new(0.3, 0, 0, 22), ControlPanel)
+local BackBtn = createBtn("MUNDUR", UDim2.new(0.67, 0, 0, 75), UDim2.new(0.3, 0, 0, 22), ControlPanel, Color3.fromRGB(40, 60, 80))
+
+local ObjLeft = createBtn("◀ KIRI", UDim2.new(0.03, 0, 0, 100), UDim2.new(0.3, 0, 0, 22), ControlPanel)
+local ObjDown = createBtn("▼ TURUN", UDim2.new(0.35, 0, 0, 100), UDim2.new(0.3, 0, 0, 22), ControlPanel)
+local ObjRight = createBtn("KANAN ▶", UDim2.new(0.67, 0, 0, 100), UDim2.new(0.3, 0, 0, 22), ControlPanel)
+FwdBtn.TextSize = 7; BackBtn.TextSize = 7; ObjLeft.TextSize = 7; ObjDown.TextSize = 7; ObjRight.TextSize = 7; ObjUp.TextSize = 7
+
+local RLBtn = createBtn("⟲ ROT KIRI", UDim2.new(0.03, 0, 0, 125), UDim2.new(0.45, 0, 0, 22), ControlPanel)
+local RRBtn = createBtn("ROT KANAN ⟳", UDim2.new(0.52, 0, 0, 125), UDim2.new(0.45, 0, 0, 22), ControlPanel)
+RLBtn.TextSize = 7; RRBtn.TextSize = 7
+
+local TiltUpBtn = createBtn("Tilt U", UDim2.new(0.03, 0, 0, 150), UDim2.new(0.22, 0, 0, 20), ControlPanel, Color3.fromRGB(80, 50, 20))
+local TiltDownBtn = createBtn("Tilt D", UDim2.new(0.265, 0, 0, 150), UDim2.new(0.22, 0, 0, 20), ControlPanel, Color3.fromRGB(80, 50, 20))
+local RollLeftBtn = createBtn("Roll L", UDim2.new(0.50, 0, 0, 150), UDim2.new(0.22, 0, 0, 20), ControlPanel, Color3.fromRGB(20, 50, 80))
+local RollRightBtn = createBtn("Roll R", UDim2.new(0.735, 0, 0, 150), UDim2.new(0.22, 0, 0, 20), ControlPanel, Color3.fromRGB(20, 50, 80))
+TiltUpBtn.TextSize = 7; TiltDownBtn.TextSize = 7; RollLeftBtn.TextSize = 7; RollRightBtn.TextSize = 7
+
+local function getGroundPrecision(pos, model)
+    local p = RaycastParams.new(); p.FilterDescendantsInstances = {model, player.Character}
+    local ray = workspace:Raycast(pos + Vector3.new(0, 100, 0), Vector3.new(0, -300, 0), p)
+    local floorY = ray and ray.Position.Y or pos.Y
+    local _, size = model:GetBoundingBox()
+    return Vector3.new(pos.X, floorY + (size.Y/2), pos.Z)
+end
+
+local function loadItems(category)
+    for _, child in ipairs(ScrollFrame:GetChildren()) do if child:IsA("Frame") then child:Destroy() end end
+    local itemCount = 0
+    for _, item in ipairs(assetList) do
+        if category == "Semua" or item.Category == category then
+            itemCount = itemCount + 1
+            local r = Instance.new("Frame")
+            r.Size = UDim2.new(0.95, 0, 0, 28); r.BackgroundTransparency = 1; r.Parent = ScrollFrame
+            local s = createBtn(item.Name, UDim2.new(0, 0, 0, 0), UDim2.new(0.8, -2, 1, 0), r, Color3.fromRGB(30, 30, 30))
+            local d = createBtn("X", UDim2.new(0.8, 2, 0, 0), UDim2.new(0.2, -2, 1, 0), r, Color3.fromRGB(80, 30, 30))
+            
+            s.MouseButton1Click:Connect(function()
+                if selectedButton then selectedButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30) end
+                selectedButton = s; s.BackgroundColor3 = Color3.fromRGB(50, 80, 120); currentItemID = item.ID
+                if previewModel then previewModel:Destroy() end
+                
+                resetSliderTo(1.0)
+                local success, objs = pcall(function() return game:GetObjects("rbxassetid://" .. item.ID) end)
+                if success and objs[1] then
+                    previewModel = objs[1]; previewModel.Parent = workspace
+                    for _, b in pairs(previewModel:GetDescendants()) do
+                        if b:IsA("BasePart") then b.Transparency = 0.5; b.CanCollide = false; b.Anchored = true end
+                    end
+                    local root = player.Character.HumanoidRootPart
+                    local _, bSize = previewModel:GetBoundingBox()
+                    local spawnPos = root.Position + (root.CFrame.LookVector * ((bSize.Z/2) + 5))
+                    previewModel:PivotTo(CFrame.new(getGroundPrecision(spawnPos, previewModel)))
+                    previewModel:ScaleTo(1.0); PlaceBtn.Visible = true
+                end
+            end)
+            d.MouseButton1Click:Connect(function()
+                local list = spawnedObjects[item.ID]
+                if list and #list > 0 then list[#list]:Destroy(); table.remove(list, #list); lastSelectedModel = list[#list] end
+            end)
+        end
+    end
+    ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, itemCount * 31)
+end
+
+for i, catName in ipairs(categoriesList) do
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0, 60, 1, 0)
+    btn.BackgroundColor3 = (i == 1) and Color3.fromRGB(80, 50, 120) or Color3.fromRGB(40, 40, 40)
+    btn.BackgroundTransparency = 0.2; btn.Text = catName; btn.TextColor3 = Color3.new(1,1,1)
+    btn.Font = Enum.Font.GothamBold; btn.TextSize = 8; btn.Parent = TabMenu
+    local c = Instance.new("UICorner"); c.CornerRadius = UDim.new(0, 4); c.Parent = btn
+    
+    if i == 1 then activeCategoryTab = btn end
+    btn.MouseButton1Click:Connect(function()
+        if activeCategoryTab then activeCategoryTab.BackgroundColor3 = Color3.fromRGB(40, 40, 40) end
+        activeCategoryTab = btn; btn.BackgroundColor3 = Color3.fromRGB(80, 50, 120) 
+        selectedButton = nil; currentItemID = ""; loadItems(catName)
+    end)
+end
+
+SaveBtn.MouseButton1Click:Connect(function() actionType = "SAVE"; SlotTitle.Text = "PILIH SLOT UNTUK SAVE"; SlotTitle.TextColor3 = Color3.fromRGB(255, 200, 50); SlotMenu.Visible = true end)
+LoadBtn.MouseButton1Click:Connect(function() actionType = "LOAD"; SlotTitle.Text = "PILIH SLOT UNTUK LOAD"; SlotTitle.TextColor3 = Color3.fromRGB(50, 200, 255); SlotMenu.Visible = true end)
+CancelSlotBtn.MouseButton1Click:Connect(function() SlotMenu.Visible = false end)
+
+for i, btn in ipairs(slotBtns) do
+    btn.MouseButton1Click:Connect(function()
+        local slotFileName = "ArchitectSave_" .. game.PlaceId .. "_Slot" .. i .. ".json"
+        if actionType == "SAVE" then
+            local data = {}
+            for id, list in pairs(spawnedObjects) do
+                for _, obj in pairs(list) do table.insert(data, {AssetID = id, Pos = {obj:GetPivot():GetComponents()}, Scale = obj:GetScale()}) end
+            end
+            writefile(slotFileName, HttpService:JSONEncode(data))
+            SlotMenu.Visible = false; SaveBtn.Text = "SAVED"; SaveBtn.BackgroundColor3 = Color3.fromRGB(30, 150, 30)
+            task.wait(1.5); SaveBtn.Text = "SIMPAN MAP"; SaveBtn.BackgroundColor3 = Color3.fromRGB(100, 80, 20)
+        elseif actionType == "LOAD" then
+            if not isfile(slotFileName) then 
+                btn.Text = "KOSONG!"; btn.BackgroundColor3 = Color3.fromRGB(150, 30, 30)
+                task.wait(1); btn.Text = "SLOT " .. i; btn.BackgroundColor3 = Color3.fromRGB(40, 50, 60)
+                return 
+            end
+            local data = HttpService:JSONDecode(readfile(slotFileName))
+            for _, info in pairs(data) do
+                local success, objs = pcall(function() return game:GetObjects("rbxassetid://" .. info.AssetID) end)
+                if success and objs[1] then
+                    local model = objs[1]; model.Parent = workspace; 
+                    model:PivotTo(CFrame.new(unpack(info.Pos)))
+                    if info.Scale then model:ScaleTo(info.Scale) end
+                    for _, d in pairs(model:GetDescendants()) do if d:IsA("BasePart") then d.Anchored = true; d.CanCollide = true end end
+                    if not spawnedObjects[info.AssetID] then spawnedObjects[info.AssetID] = {} end
+                    table.insert(spawnedObjects[info.AssetID], model); lastSelectedModel = model
+                end
+            end
+            SlotMenu.Visible = false; LoadBtn.Text = "LOADED!"; LoadBtn.BackgroundColor3 = Color3.fromRGB(30, 150, 30)
+            task.wait(1.5); LoadBtn.Text = "FILE MAP KAMU"; LoadBtn.BackgroundColor3 = Color3.fromRGB(20, 80, 100)
+        end
+    end)
+end
+
+PlaceBtn.MouseButton1Click:Connect(function()
+    if previewModel and currentItemID ~= "" then
+        for _, d in pairs(previewModel:GetDescendants()) do
+            if d:IsA("BasePart") then d.Transparency = 0; d.CanCollide = true; d.Anchored = true end
+        end
+        if not spawnedObjects[currentItemID] then spawnedObjects[currentItemID] = {} end
+        table.insert(spawnedObjects[currentItemID], previewModel)
+        lastSelectedModel = previewModel; previewModel = nil; PlaceBtn.Visible = false
+    end
+end)
+
+local function move(act)
+    local t = previewModel or lastSelectedModel; if not t then return end
+    local cf, s = t:GetPivot(), 2.5
+    if act == "F" then t:PivotTo(cf * CFrame.new(0,0,-s))
+    elseif act == "B" then t:PivotTo(cf * CFrame.new(0,0,s))
+    elseif act == "L" then t:PivotTo(cf * CFrame.new(-s,0,0))
+    elseif act == "R" then t:PivotTo(cf * CFrame.new(s,0,0))
+    elseif act == "U" then t:PivotTo(cf * CFrame.new(0,s,0))
+    elseif act == "D" then t:PivotTo(cf * CFrame.new(0,-s,0))
+    elseif act == "RL" then t:PivotTo(cf * CFrame.Angles(0,math.rad(15),0))
+    elseif act == "RR" then t:PivotTo(cf * CFrame.Angles(0,math.rad(-15),0))
+    elseif act == "TU" then t:PivotTo(cf * CFrame.Angles(math.rad(15),0,0))
+    elseif act == "TD" then t:PivotTo(cf * CFrame.Angles(math.rad(-15),0,0))
+    elseif act == "R_L" then t:PivotTo(cf * CFrame.Angles(0,0,math.rad(15)))
+    elseif act == "R_R" then t:PivotTo(cf * CFrame.Angles(0,0,math.rad(-15))) end
+end
+
+ObjUp.MouseButton1Click:Connect(function() move("U") end)
+ObjDown.MouseButton1Click:Connect(function() move("D") end)
+ObjLeft.MouseButton1Click:Connect(function() move("L") end)
+ObjRight.MouseButton1Click:Connect(function() move("R") end)
+FwdBtn.MouseButton1Click:Connect(function() move("F") end)
+BackBtn.MouseButton1Click:Connect(function() move("B") end)
+
+RLBtn.MouseButton1Click:Connect(function() move("RL") end)
+RRBtn.MouseButton1Click:Connect(function() move("RR") end)
+TiltUpBtn.MouseButton1Click:Connect(function() move("TU") end)
+TiltDownBtn.MouseButton1Click:Connect(function() move("TD") end)
+RollLeftBtn.MouseButton1Click:Connect(function() move("R_L") end)
+RollRightBtn.MouseButton1Click:Connect(function() move("R_R") end)
+
+MinBtn.MouseButton1Click:Connect(function()
+    isMinimized = not isMinimized
+    ScrollFrame.Visible, ControlPanel.Visible, TabMenu.Visible = not isMinimized, not isMinimized, not isMinimized
+    if SlotMenu.Visible then SlotMenu.Visible = false end
+    if ConfirmMenu.Visible then ConfirmMenu.Visible = false end
+    MainFrame.Size = isMinimized and UDim2.new(0, 240, 0, 25) or UDim2.new(0, 240, 0, 320)
+    MinBtn.Text = isMinimized and "+" or "-"
+end)
+
+CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
+
+loadItems("Semua")
