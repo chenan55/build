@@ -95,9 +95,9 @@ local assetList = {
     {Name = "pesawat tempur", ID = "163679132", Category = "Kendaraan"}, {Name = "bomber", ID = "4735054708", Category = "Kendaraan"},
     {Name = "jet", ID = "80035747745904", Category = "Kendaraan"}, {Name = "ekskavator", ID = "9028664826", Category = "Kendaraan"},
     {Name = "mobil1", ID = "10219147767", Category= "Kendaraan"}, 
-    {Name = "vario1", ID = "90709291254515", Category= " Kendaraan "},
-    {Name = "vario2", ID = "124075479923855", Category= " Kendaraan "},
-    {Name = "pcx", ID = "73616164213197", Category= " Kendaraan "},
+    {Name = "vario1", ID = "90709291254515", Category= "Kendaraan"},
+    {Name = "vario2", ID = "124075479923855", Category= "Kendaraan"},
+    {Name = "pcx", ID = "73616164213197", Category= "Kendaraan"},
 
 
     
