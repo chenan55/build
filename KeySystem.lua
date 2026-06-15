@@ -1,8 +1,8 @@
 -- // CONFIGURASI WHITELIST (TULIS PERSIS SEPERTI USERNAME ASLI DI ROBLOX)
 local AllowedUsers = {
     ["Ramadham_yt37"] = true, 
-    ["Choraaaaa18"] = true,   
-    ["Choraaaa18"] = true     
+    ["choraaaaa18"] = true,   
+    ["choraaaa18"] = true     
 }
 
 local ScriptUtama = "https://raw.githubusercontent.com/chenan55/build/refs/heads/main/Script%20gurun"
