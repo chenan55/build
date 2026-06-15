@@ -15,9 +15,6 @@ local PlayerName = Player.Name
 local function LoadAllScripts()
     local success1, result1 = pcall(function() return loadstring(game:HttpGet(ScriptUtama))() end)
     if not success1 then warn("Gagal memuat Script Utama: " .. tostring(result1)) end
-    
-    local success2, result2 = pcall(function() return loadstring(game:HttpGet(ScriptKedua))() end)
-    if not success2 then warn("Gagal memuat Script Kedua: " .. tostring(result2)) end
 end
 
 -- // SETUP UI WARNA PINK & KUNING + WALLPAPER BUNGA
