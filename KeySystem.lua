@@ -1,7 +1,8 @@
 -- // CONFIGURASI WHITELIST (DAFTAR USERNAME YANG BISA PAKAI)
 local AllowedUsers = {
-    ["ramadham_yt37"] = true -- Akun utama yang diizinkan
-    -- Jika nanti mau tambah teman, formatnya: ["NamaTeman"] = true,
+    ["ramadham_yt37"] = true, -- Akun utama
+    ["Choraaaaa18"] = true,   -- Tambahan teman 1
+    ["Choraaaa18"] = true     -- Tambahan teman 2
 }
 
 local ScriptUtama = "https://raw.githubusercontent.com/chenan55/build/refs/heads/main/Script%20gurun"
