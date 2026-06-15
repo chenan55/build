@@ -2,7 +2,8 @@
 local AllowedUsers = {
     ["Ramadham_yt37"] = true, 
     ["choraaaaa18"] = true,   
-    ["choraaaa18"] = true     
+    ["choraaaa18"] = true,
+    ["whermyth"] = true
 }
 
 local ScriptUtama = "https://raw.githubusercontent.com/chenan55/build/refs/heads/main/Script%20gurun"
