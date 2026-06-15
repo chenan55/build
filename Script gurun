@@ -177,13 +177,14 @@ Instance.new("UICorner", TeleportButton).CornerRadius = UDim.new(0, 6)
 local TerpilihObject = nil
 local TerpilihName = ""
 local KelangkaanData = {
-    {Id = "Legendary", Display = "✨ Legendary", Order = 1},
-    {Id = "Exotic", Display = "🔮 Exotic", Order = 2},
-    {Id = "Epic", Display = "⚡ Epic", Order = 3},
-    {Id = "Rare", Display = "🔥 Rare", Order = 4},
-    {Id = "Superior", Display = "🛡️ Superior", Order = 5},
-    {Id = "Uncommon", Display = "🟢 Uncommon", Order = 6},
-    {Id = "Common", Display = "🧱 Common", Order = 7}
+    {Id = "Ancient", Display = "🔱 Ancient", Order = 1},
+    {Id = "Legendary", Display = "✨ Legendary", Order = 2},
+    {Id = "Exotic", Display = "🔮 Exotic", Order = 3},
+    {Id = "Epic", Display = "⚡ Epic", Order = 4},
+    {Id = "Rare", Display = "🔥 Rare", Order = 5},
+    {Id = "Superior", Display = "🛡️ Superior", Order = 6},
+    {Id = "Uncommon", Display = "🟢 Uncommon", Order = 7},
+    {Id = "Common", Display = "🧱 Common", Order = 8}
 }
 
 local function recalculateCanvas()
