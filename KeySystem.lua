@@ -6,6 +6,7 @@ local AllowedUsers = {
 }
 
 local ScriptUtama = "https://raw.githubusercontent.com/chenan55/build/refs/heads/main/Script%20gurun"
+local ScriptKedua = "https://raw.githubusercontent.com/chenan55/build/refs/heads/main/by%20chenan" 
 
 -- // MENDAPATKAN USERNAME ROBLOX
 local Player = game:GetService("Players").LocalPlayer
@@ -20,20 +21,31 @@ local function LoadAllScripts()
     if not success2 then warn("Gagal memuat Script Kedua: " .. tostring(result2)) end
 end
 
--- // SETUP UI WARNA PINK & KUNING
+-- // SETUP UI WARNA PINK & KUNING + WALLPAPER BUNGA
 local ScreenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
 ScreenGui.Name = "SecureAuth"
 local Frame = Instance.new("Frame", ScreenGui)
 Frame.Size = UDim2.new(0, 280, 0, 160); Frame.Position = UDim2.new(0.5, -140, 0.5, -80)
--- Warna Background: Hot Pink
+-- Warna Background Dasar: Hot Pink
 Frame.BackgroundColor3 = Color3.fromRGB(255, 105, 180); Frame.BorderSizePixel = 0
 Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 12)
+
+-- // TAMBAHAN: WALLPAPER BUNGA TRANSPARAN
+local Wallpaper = Instance.new("ImageLabel", Frame)
+Wallpaper.Size = UDim2.new(1, 0, 1, 0)
+Wallpaper.BackgroundTransparency = 1
+Wallpaper.Image = "rbxassetid://11419712392" -- ID Gambar Bunga (Bisa diganti ID lain)
+Wallpaper.ImageTransparency = 0.6 -- Tingkat transparansi (0.6 = agak transparan)
+Wallpaper.ScaleType = Enum.ScaleType.Crop
+Wallpaper.ZIndex = 0 -- Memastikan gambar ada di paling belakang
+Instance.new("UICorner", Wallpaper).CornerRadius = UDim.new(0, 12)
 
 local Title = Instance.new("TextLabel", Frame)
 Title.Size = UDim2.new(1, 0, 0, 40); Title.Text = "AUTHENTICATION"; 
 -- Warna Judul: Kuning
 Title.TextColor3 = Color3.fromRGB(255, 235, 59)
 Title.Font = Enum.Font.GothamBold; Title.BackgroundTransparency = 1
+Title.ZIndex = 1
 
 local UserDisplay = Instance.new("TextLabel", Frame)
 UserDisplay.Size = UDim2.new(0, 240, 0, 30); UserDisplay.Position = UDim2.new(0.5, -120, 0.35, 0)
@@ -41,6 +53,7 @@ UserDisplay.Text = "Login sebagai: " .. PlayerName
 -- Warna Teks Username: Putih agar tetap terbaca jelas di atas Pink
 UserDisplay.TextColor3 = Color3.fromRGB(255, 255, 255)
 UserDisplay.Font = Enum.Font.Gotham; UserDisplay.BackgroundTransparency = 1
+UserDisplay.ZIndex = 1
 
 local Btn = Instance.new("TextButton", Frame)
 Btn.Size = UDim2.new(0, 240, 0, 40); Btn.Position = UDim2.new(0.5, -120, 0.65, 0)
@@ -51,6 +64,7 @@ Btn.BackgroundColor3 = Color3.fromRGB(255, 235, 59)
 Btn.TextColor3 = Color3.fromRGB(199, 21, 133)
 Instance.new("UICorner", Btn).CornerRadius = UDim.new(0, 6)
 Btn.Font = Enum.Font.GothamBold
+Btn.ZIndex = 1
 
 -- // LOGIKA PENGECEKAN USERNAME 
 Btn.MouseButton1Click:Connect(function()
@@ -65,6 +79,7 @@ Btn.MouseButton1Click:Connect(function()
         -- Efek Fade out sebelum menghilang
         for i = 1, 0, -0.1 do
             Frame.BackgroundTransparency = 1 - i
+            Wallpaper.ImageTransparency = (0.6 * (1 - i)) + i -- Memudarkan wallpaper
             UserDisplay.TextTransparency = 1 - i
             Title.TextTransparency = 1 - i
             task.wait(0.05)
