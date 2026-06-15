@@ -6,7 +6,6 @@ local AllowedUsers = {
 }
 
 local ScriptUtama = "https://raw.githubusercontent.com/chenan55/build/refs/heads/main/Script%20gurun"
-local ScriptKedua = "https://raw.githubusercontent.com/chenan55/build/refs/heads/main/by%20chenan" 
 
 -- // MENDAPATKAN USERNAME ROBLOX
 local Player = game:GetService("Players").LocalPlayer
