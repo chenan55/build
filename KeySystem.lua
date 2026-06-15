@@ -1,8 +1,8 @@
--- // CONFIGURASI WHITELIST (DAFTAR USERNAME YANG BISA PAKAI)
+-- // CONFIGURASI WHITELIST (WAJIB TULIS DENGAN HURUF KECIL SEMUA DI SINI)
 local AllowedUsers = {
     ["ramadham_yt37"] = true, -- Akun utama
-    ["Choraaaaa18"] = true,   -- Tambahan teman 1
-    ["Choraaaa18"] = true     -- Tambahan teman 2
+    ["choraaaaa18"] = true,   -- Tambahan teman 1 (huruf kecil semua)
+    ["choraaaa18"] = true     -- Tambahan teman 2 (huruf kecil semua)
 }
 
 local ScriptUtama = "https://raw.githubusercontent.com/chenan55/build/refs/heads/main/Script%20gurun"
@@ -21,7 +21,7 @@ local function LoadAllScripts()
     if not success2 then warn("Gagal memuat Script Kedua: " .. tostring(result2)) end
 end
 
--- // SETUP UI MODERN (TANPA KOLOM INPUT KEY)
+-- // SETUP UI MODERN
 local ScreenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
 ScreenGui.Name = "SecureAuth"
 local Frame = Instance.new("Frame", ScreenGui)
@@ -45,13 +45,16 @@ Btn.Text = "MASUK"; Btn.BackgroundColor3 = Color3.fromRGB(0, 120, 255)
 Btn.TextColor3 = Color3.new(1,1,1); Instance.new("UICorner", Btn).CornerRadius = UDim.new(0, 6)
 Btn.Font = Enum.Font.GothamBold
 
--- // LOGIKA PENGECEKAN USERNAME SAAT TOMBOL DIKLIK
+-- // LOGIKA PENGECEKAN USERNAME (CASE-INSENSITIVE)
 Btn.MouseButton1Click:Connect(function()
     Btn.Text = "Memeriksa..."
     task.wait(0.8)
     
-    -- Mengecek apakah Username yang sedang main ada di dalam daftar AllowedUsers
-    if AllowedUsers[PlayerName] then
+    -- Mengubah username player menjadi huruf kecil semua untuk dicocokkan
+    local PlayerNameLower = string.lower(PlayerName)
+    
+    -- Mengecek apakah Username (yang sudah dikecilkan) ada di daftar
+    if AllowedUsers[PlayerNameLower] then
         Btn.Text = "AKSES DITERIMA!"
         Btn.BackgroundColor3 = Color3.fromRGB(0, 180, 0)
         
