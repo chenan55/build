@@ -1,6 +1,6 @@
 -- // CONFIGURASI WHITELIST (WAJIB TULIS DENGAN HURUF KECIL SEMUA DI SINI)
 local AllowedUsers = {
-    ["ramadham_yt37"] = true, -- Akun utama
+    ["Ramadham_yt37"] = true, -- Akun utama
     ["choraaaaa18"] = true,   -- Tambahan teman 1 (huruf kecil semua)
     ["choraaaa18"] = true     -- Tambahan teman 2 (huruf kecil semua)
 }
