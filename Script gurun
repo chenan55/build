@@ -2,14 +2,12 @@ local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local Lighting = game:GetService("Lighting")
-local TweenService = game:GetService("TweenService") -- Menambahkan TweenService untuk animasi
+local TweenService = game:GetService("TweenService")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- Menghindari UI macet jika folder DigSpots belum ada
 local DigSpotsFolder = workspace:FindFirstChild("DigSpots")
 
--- Bersihkan UI Lama
 if PlayerGui:FindFirstChild("UnifiedTeleportHub") then
     PlayerGui.UnifiedTeleportHub:Destroy()
 end
@@ -26,6 +24,17 @@ local WARNA_BIRU = Color3.fromRGB(20, 120, 230)
 local WARNA_BG = Color3.fromRGB(20, 15, 30)
 local TELUR_BEBEK_TUA = Color3.fromRGB(150, 180, 180)
 local TOSCA = Color3.fromRGB(64, 224, 208)
+
+local ThemeMonster = {
+    ToscaBg = Color3.fromRGB(32, 178, 170),    
+    ToscaDark = Color3.fromRGB(0, 128, 128),   
+    YellowAcc = Color3.fromRGB(255, 215, 0),   
+    YellowDark = Color3.fromRGB(200, 170, 0),  
+    PinkSoft = Color3.fromRGB(255, 170, 210),  
+    PinkNeon = Color3.fromRGB(255, 50, 150),   
+    TextDark = Color3.fromRGB(30, 30, 30),     
+    TextLight = Color3.fromRGB(255, 255, 255)  
+}
 
 -- ========================================================
 -- 2. MAIN GUI & TOMBOL UTAMA
@@ -51,15 +60,15 @@ MainMenuButton.Parent = ScreenGui
 Instance.new("UICorner", MainMenuButton).CornerRadius = UDim.new(0, 8)
 
 -- ========================================================
--- 3. MENU PILIHAN (HUB - DENGAN 5 TOMBOL)
+-- 3. MENU PILIHAN (HUB - DENGAN 6 TOMBOL)
 -- ========================================================
 local SelectionFrame = Instance.new("Frame")
-SelectionFrame.Size = UDim2.new(0, 160, 0, 0) -- Dimulai dari 0 untuk efek transisi animasi dropdown
-SelectionFrame.Position = UDim2.new(0, 0, 1, 8) -- Posisi kini mengikuti MainMenuButton (8 pixel di bawahnya)
+SelectionFrame.Size = UDim2.new(0, 160, 0, 0)
+SelectionFrame.Position = UDim2.new(0, 0, 1, 8)
 SelectionFrame.BackgroundColor3 = WARNA_BG
 SelectionFrame.Visible = false
-SelectionFrame.ClipsDescendants = true -- Memotong isi frame saat animasi mengecil agar tidak tembus
-SelectionFrame.Parent = MainMenuButton -- Diubah menjadi child MainMenuButton agar ikut bergerak saat di-drag
+SelectionFrame.ClipsDescendants = true
+SelectionFrame.Parent = MainMenuButton
 Instance.new("UICorner", SelectionFrame).CornerRadius = UDim.new(0, 8)
 
 local BtnMenuGalian = Instance.new("TextButton", SelectionFrame)
@@ -112,6 +121,39 @@ BtnMenuLangit.Font = Enum.Font.Ubuntu
 BtnMenuLangit.TextSize = 13
 Instance.new("UICorner", BtnMenuLangit).CornerRadius = UDim.new(0, 6)
 
+-- TOMBOL MENU MONSTER BARU
+local BtnMenuMonster = Instance.new("TextButton", SelectionFrame)
+BtnMenuMonster.Size = UDim2.new(1, -10, 0, 30)
+BtnMenuMonster.Position = UDim2.new(0, 5, 0, 180)
+BtnMenuMonster.BackgroundColor3 = ThemeMonster.ToscaDark
+BtnMenuMonster.Text = "menu monster"
+BtnMenuMonster.TextColor3 = ThemeMonster.YellowAcc
+BtnMenuMonster.Font = Enum.Font.Ubuntu
+BtnMenuMonster.TextSize = 13
+Instance.new("UICorner", BtnMenuMonster).CornerRadius = UDim.new(0, 6)
+
+-- TULISAN "NEW" BERKEDIP
+local NewLabel = Instance.new("TextLabel", BtnMenuMonster)
+NewLabel.Size = UDim2.new(0, 30, 0, 12)
+NewLabel.Position = UDim2.new(1, -25, 0, -5) -- Di pinggir atas
+NewLabel.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+NewLabel.Text = "NEW"
+NewLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+NewLabel.Font = Enum.Font.GothamBold
+NewLabel.TextSize = 8
+Instance.new("UICorner", NewLabel).CornerRadius = UDim.new(0, 3)
+
+-- Animasi Berkedip
+task.spawn(function()
+    while task.wait(0.5) do
+        if NewLabel and NewLabel.Parent then
+            NewLabel.BackgroundTransparency = NewLabel.BackgroundTransparency == 0 and 0.5 or 0
+        else
+            break
+        end
+    end
+end)
+
 -- ========================================================
 -- 4. UI SCRIPT 1: MENCARI LOKASI ITEMS (GALIAN)
 -- ========================================================
@@ -133,6 +175,27 @@ TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TitleLabel.Font = Enum.Font.Jura
 TitleLabel.TextSize = 15
 Instance.new("UICorner", TitleLabel).CornerRadius = UDim.new(0, 10)
+
+local MenuCloseBtn = Instance.new("TextButton", MenuFrame)
+MenuCloseBtn.Size = UDim2.new(0, 20, 0, 20)
+MenuCloseBtn.Position = UDim2.new(1, -25, 0, 6)
+MenuCloseBtn.Text = "X"
+MenuCloseBtn.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
+MenuCloseBtn.TextColor3 = Color3.new(1, 1, 1)
+MenuCloseBtn.Font = Enum.Font.Jura
+MenuCloseBtn.TextSize = 12
+Instance.new("UICorner", MenuCloseBtn).CornerRadius = UDim.new(0, 4)
+MenuCloseBtn.MouseButton1Click:Connect(function() MenuFrame.Visible = false end)
+
+local MenuMinBtn = Instance.new("TextButton", MenuFrame)
+MenuMinBtn.Size = UDim2.new(0, 20, 0, 20)
+MenuMinBtn.Position = UDim2.new(1, -50, 0, 6)
+MenuMinBtn.Text = "-"
+MenuMinBtn.BackgroundColor3 = Color3.fromRGB(135, 206, 250)
+MenuMinBtn.TextColor3 = Color3.new(20, 20, 25)
+MenuMinBtn.Font = Enum.Font.Jura
+MenuMinBtn.TextSize = 14
+Instance.new("UICorner", MenuMinBtn).CornerRadius = UDim.new(0, 4)
 
 local DigScrollFrame = Instance.new("ScrollingFrame", MenuFrame)
 DigScrollFrame.Size = UDim2.new(0.92, 0, 0.58, 0)
@@ -174,6 +237,26 @@ TeleportButton.Font = Enum.Font.Ubuntu
 TeleportButton.TextSize = 13
 Instance.new("UICorner", TeleportButton).CornerRadius = UDim.new(0, 6)
 
+local isMenuMinimized = false
+MenuMinBtn.MouseButton1Click:Connect(function()
+    isMenuMinimized = not isMenuMinimized
+    if isMenuMinimized then
+        MenuFrame.Size = UDim2.new(0, 200, 0, 32)
+        DigScrollFrame.Visible = false
+        StatusLabel.Visible = false
+        CancelButton.Visible = false
+        TeleportButton.Visible = false
+        MenuMinBtn.Text = "+"
+    else
+        MenuFrame.Size = UDim2.new(0, 200, 0, 290)
+        DigScrollFrame.Visible = true
+        StatusLabel.Visible = true
+        CancelButton.Visible = true
+        TeleportButton.Visible = true
+        MenuMinBtn.Text = "-"
+    end
+end)
+
 local TerpilihObject = nil
 local TerpilihName = ""
 local KelangkaanData = {
@@ -187,8 +270,17 @@ local KelangkaanData = {
     {Id = "Common", Display = "🧱 Common", Order = 8}
 }
 
+local knownSpots = {}
+local spotCounters = {}
+
 local function recalculateCanvas()
     DigScrollFrame.CanvasSize = UDim2.new(0, 0, 0, DigListLayout.AbsoluteContentSize.Y + 6)
+end
+
+local function resetCamera()
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+        workspace.CurrentCamera.CameraSubject = LocalPlayer.Character.Humanoid
+    end
 end
 
 local function buildMenuDinamis()
@@ -203,11 +295,19 @@ local function buildMenuDinamis()
         local galianDitemukan = {}
         for _, spot in pairs(DigSpotsFolder:GetChildren()) do
             if string.find(spot.Name, k.Id) then
+                if not knownSpots[spot] then
+                    spotCounters[k.Id] = (spotCounters[k.Id] or 0) + 1
+                    knownSpots[spot] = spotCounters[k.Id]
+                end
                 table.insert(galianDitemukan, spot)
             end
         end
 
         if #galianDitemukan > 0 then
+            table.sort(galianDitemukan, function(a, b)
+                return knownSpots[a] < knownSpots[b]
+            end)
+
             local CategoryGroupFrame = Instance.new("Frame", DigScrollFrame)
             CategoryGroupFrame.Size = UDim2.new(1, 0, 0, 30)
             CategoryGroupFrame.BackgroundTransparency = 1
@@ -237,27 +337,42 @@ local function buildMenuDinamis()
             ExpandIndicator.TextSize = 12
 
             local isExpanded = false
-            local SubButtonsList = {}
+            local SubFramesList = {}
 
-            for index, spotObject in ipairs(galianDitemukan) do
-                local SubButton = Instance.new("TextButton", CategoryGroupFrame)
-                SubButton.Size = UDim2.new(0.92, 0, 0, 28)
+            for _, spotObject in ipairs(galianDitemukan) do
+                local index = knownSpots[spotObject]
+
+                local SubItemFrame = Instance.new("Frame", CategoryGroupFrame)
+                SubItemFrame.Size = UDim2.new(0.92, 0, 0, 28)
+                SubItemFrame.BackgroundTransparency = 1
+                SubItemFrame.Visible = false
+                table.insert(SubFramesList, SubItemFrame)
+
+                local SubButton = Instance.new("TextButton", SubItemFrame)
+                SubButton.Size = UDim2.new(0.78, 0, 1, 0)
                 SubButton.BackgroundColor3 = WARNA_UNGU 
                 SubButton.Text = "📍 " .. k.Id .. " " .. index
                 SubButton.TextColor3 = Color3.fromRGB(255, 255, 255)
                 SubButton.Font = Enum.Font.Ubuntu
                 SubButton.TextSize = 12
-                SubButton.Visible = false
                 Instance.new("UICorner", SubButton).CornerRadius = UDim.new(0, 4)
                 
-                table.insert(SubButtonsList, SubButton)
+                local EyeBtn = Instance.new("TextButton", SubItemFrame)
+                EyeBtn.Size = UDim2.new(0.2, 0, 1, 0)
+                EyeBtn.Position = UDim2.new(0.8, 0, 0, 0)
+                EyeBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+                EyeBtn.Text = "👁️"
+                EyeBtn.Font = Enum.Font.Ubuntu
+                EyeBtn.TextSize = 13
+                Instance.new("UICorner", EyeBtn).CornerRadius = UDim.new(0, 4)
 
                 SubButton.MouseButton1Click:Connect(function()
                     for _, folder in pairs(DigScrollFrame:GetChildren()) do
                         if folder:IsA("Frame") then
-                            for _, b in pairs(folder:GetChildren()) do
-                                if b:IsA("TextButton") and b ~= MainCatButton then
-                                    b.BackgroundColor3 = WARNA_UNGU 
+                            for _, subFrame in pairs(folder:GetChildren()) do
+                                if subFrame:IsA("Frame") then
+                                    local btn = subFrame:FindFirstChildOfClass("TextButton")
+                                    if btn then btn.BackgroundColor3 = WARNA_UNGU end
                                 end
                             end
                         end
@@ -268,18 +383,41 @@ local function buildMenuDinamis()
                     StatusLabel.Text = "Target Pas: " .. TerpilihName
                     StatusLabel.TextColor3 = WARNA_BIRU 
                 end)
+
+                EyeBtn.MouseButton1Click:Connect(function()
+                    local targetPart = spotObject:IsA("BasePart") and spotObject or spotObject:FindFirstChildWhichIsA("BasePart") or spotObject.PrimaryPart
+                    if targetPart then
+                        if workspace.CurrentCamera.CameraSubject == targetPart then
+                            resetCamera()
+                            EyeBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+                        else
+                            workspace.CurrentCamera.CameraSubject = targetPart
+                            for _, folder in pairs(DigScrollFrame:GetChildren()) do
+                                if folder:IsA("Frame") then
+                                    for _, sub in pairs(folder:GetChildren()) do
+                                        if sub:IsA("Frame") then
+                                            local e = sub:GetChildren()[2] 
+                                            if e and e:IsA("TextButton") then e.BackgroundColor3 = Color3.fromRGB(60, 60, 60) end
+                                        end
+                                    end
+                                end
+                            end
+                            EyeBtn.BackgroundColor3 = WARNA_BIRU
+                        end
+                    end
+                end)
             end
 
             MainCatButton.MouseButton1Click:Connect(function()
                 isExpanded = not isExpanded
                 if isExpanded then
                     ExpandIndicator.Text = "[ - ]"
-                    CategoryGroupFrame.Size = UDim2.new(1, 0, 0, 30 + (#SubButtonsList * 31))
-                    for _, subBtn in ipairs(SubButtonsList) do subBtn.Visible = true end
+                    CategoryGroupFrame.Size = UDim2.new(1, 0, 0, 30 + (#SubFramesList * 31))
+                    for _, f in ipairs(SubFramesList) do f.Visible = true end
                 else
                     ExpandIndicator.Text = "[ + ]"
                     CategoryGroupFrame.Size = UDim2.new(1, 0, 0, 30)
-                    for _, subBtn in ipairs(SubButtonsList) do subBtn.Visible = false end
+                    for _, f in ipairs(SubFramesList) do f.Visible = false end
                 end
                 task.wait(0.01)
                 recalculateCanvas()
@@ -299,12 +437,14 @@ TeleportButton.MouseButton1Click:Connect(function()
             TerpilihObject = nil
             StatusLabel.Text = "Target: Belum Memilih"
             StatusLabel.TextColor3 = WARNA_PINK_TUA
+            resetCamera() 
         end
     end
 end)
 
 CancelButton.MouseButton1Click:Connect(function()
     MenuFrame.Visible = false
+    resetCamera()
 end)
 
 -- ========================================================
@@ -360,15 +500,26 @@ end)
 
 local PT_Title = Instance.new("TextLabel", PlayerTeleportFrame)
 PT_Title.Size = UDim2.new(1, -30, 0, 30)
-PT_Title.Text = "teleport player by_chenan"
+PT_Title.Text = "teleport by_chenan"
 PT_Title.TextColor3 = Color3.fromRGB(255, 255, 255) 
 PT_Title.BackgroundTransparency = 1
 PT_Title.Font = Enum.Font.Jura
 PT_Title.TextSize = 13
 
+local PT_CloseBtn = Instance.new("TextButton", PlayerTeleportFrame)
+PT_CloseBtn.Size = UDim2.new(0, 20, 0, 20)
+PT_CloseBtn.Position = UDim2.new(1, -25, 0, 5)
+PT_CloseBtn.Text = "X"
+PT_CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
+PT_CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+PT_CloseBtn.Font = Enum.Font.Jura
+PT_CloseBtn.TextSize = 12
+Instance.new("UICorner", PT_CloseBtn).CornerRadius = UDim.new(0, 4)
+PT_CloseBtn.MouseButton1Click:Connect(function() PlayerTeleportFrame.Visible = false end)
+
 local PT_MinimizeBtn = Instance.new("TextButton", PlayerTeleportFrame)
 PT_MinimizeBtn.Size = UDim2.new(0, 20, 0, 20)
-PT_MinimizeBtn.Position = UDim2.new(1, -25, 0, 5)
+PT_MinimizeBtn.Position = UDim2.new(1, -50, 0, 5)
 PT_MinimizeBtn.Text = "-"
 PT_MinimizeBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 PT_MinimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -564,9 +715,7 @@ PT_BtnTeleport.MouseButton1Click:Connect(function()
 end)
 
 PT_BtnReset.MouseButton1Click:Connect(function()
-    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
-        workspace.CurrentCamera.CameraSubject = LocalPlayer.Character.Humanoid
-    end
+    resetCamera()
 end)
 
 Players.PlayerAdded:Connect(updatePlayerList)
@@ -912,7 +1061,7 @@ LangitFrame.Size = UDim2.new(0, 190, 0, 180)
 LangitFrame.Position = UDim2.new(0.5, -95, 0.5, -90)
 LangitFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
 LangitFrame.Active = true
-LangitFrame.Visible = false -- Disembunyikan secara default
+LangitFrame.Visible = false 
 Instance.new("UICorner", LangitFrame).CornerRadius = UDim.new(0, 12)
 
 local LangitTitle = Instance.new("TextLabel", LangitFrame)
@@ -1032,7 +1181,275 @@ UserInputService.InputChanged:Connect(function(input)
 end)
 
 -- ========================================================
--- 9. LOGIKA MENU PILIHAN (DENGAN ANIMASI)
+-- 9. UI SCRIPT 6: MENU MONSTER PRO
+-- ========================================================
+
+local MonsterFrame = Instance.new("Frame")
+MonsterFrame.Size = UDim2.new(0, 180, 0, 158) 
+MonsterFrame.Position = UDim2.new(0.5, -90, 0.2, 0)
+MonsterFrame.BackgroundColor3 = ThemeMonster.ToscaBg
+MonsterFrame.BorderSizePixel = 0
+MonsterFrame.ClipsDescendants = true
+MonsterFrame.Visible = false
+MonsterFrame.Parent = ScreenGui
+Instance.new("UICorner", MonsterFrame).CornerRadius = UDim.new(0, 6)
+
+local MonsterStroke = Instance.new("UIStroke", MonsterFrame)
+MonsterStroke.Color = ThemeMonster.YellowAcc
+MonsterStroke.Thickness = 1.5
+
+local MonTopBar = Instance.new("Frame")
+MonTopBar.Size = UDim2.new(1, 0, 0, 25)
+MonTopBar.BackgroundColor3 = ThemeMonster.ToscaDark
+MonTopBar.BorderSizePixel = 0
+MonTopBar.Parent = MonsterFrame
+
+local MonTitle = Instance.new("TextLabel")
+MonTitle.Size = UDim2.new(1, -50, 1, 0)
+MonTitle.Position = UDim2.new(0, 8, 0, 0)
+MonTitle.BackgroundTransparency = 1
+MonTitle.Text = "menu monster pro"
+MonTitle.TextColor3 = ThemeMonster.YellowAcc
+MonTitle.Font = Enum.Font.GothamBold
+MonTitle.TextSize = 11
+MonTitle.TextXAlignment = Enum.TextXAlignment.Left
+MonTitle.Parent = MonTopBar
+
+local MonMinBtn = Instance.new("TextButton")
+MonMinBtn.Size = UDim2.new(0, 25, 1, 0)
+MonMinBtn.Position = UDim2.new(1, -50, 0, 0)
+MonMinBtn.BackgroundTransparency = 1
+MonMinBtn.Text = "-"
+MonMinBtn.TextColor3 = ThemeMonster.TextLight
+MonMinBtn.Font = Enum.Font.GothamBold
+MonMinBtn.TextSize = 16
+MonMinBtn.Parent = MonTopBar
+
+local MonCloseBtn = Instance.new("TextButton")
+MonCloseBtn.Size = UDim2.new(0, 25, 1, 0)
+MonCloseBtn.Position = UDim2.new(1, -25, 0, 0)
+MonCloseBtn.BackgroundTransparency = 1
+MonCloseBtn.Text = "X"
+MonCloseBtn.TextColor3 = Color3.fromRGB(255, 80, 80)
+MonCloseBtn.Font = Enum.Font.GothamBold
+MonCloseBtn.TextSize = 12
+MonCloseBtn.Parent = MonTopBar
+
+local MonContent = Instance.new("Frame")
+MonContent.Size = UDim2.new(1, 0, 1, -25)
+MonContent.Position = UDim2.new(0, 0, 0, 25)
+MonContent.BackgroundTransparency = 1
+MonContent.Parent = MonsterFrame
+
+local function createMonButton(name, yPos)
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(0.9, 0, 0, 26)
+    btn.Position = UDim2.new(0.05, 0, 0, yPos)
+    btn.BackgroundColor3 = ThemeMonster.YellowDark
+    btn.Text = name .. ": OFF"
+    btn.TextColor3 = ThemeMonster.TextLight
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 10
+    btn.AutoButtonColor = false
+    btn.Parent = MonContent
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 4)
+    return btn
+end
+
+local BtnHidup = createMonButton("monster hidup", 6)
+local BtnSemua = createMonButton("tampilkan semua monster", 38)
+local BtnKebal = createMonButton("kebal monster", 70)
+local BtnHapus = createMonButton("hapus monster", 102)
+
+local monDragging, monDragInput, monDragStart, monStartPos
+MonTopBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        monDragging = true
+        monDragStart = input.Position
+        monStartPos = MonsterFrame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then monDragging = false end
+        end)
+    end
+end)
+MonTopBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        monDragInput = input
+    end
+end)
+RunService.RenderStepped:Connect(function()
+    if monDragging and monDragInput then
+        local delta = monDragInput.Position - monDragStart
+        MonsterFrame.Position = UDim2.new(monStartPos.X.Scale, monStartPos.X.Offset + delta.X, monStartPos.Y.Scale, monStartPos.Y.Offset + delta.Y)
+    end
+end)
+
+local isMonMinimized = false
+MonMinBtn.MouseButton1Click:Connect(function()
+    isMonMinimized = not isMonMinimized
+    MonsterFrame.Size = isMonMinimized and UDim2.new(0, 180, 0, 25) or UDim2.new(0, 180, 0, 158)
+end)
+
+MonCloseBtn.MouseButton1Click:Connect(function()
+    MonsterFrame.Visible = false
+end)
+
+local monConfig = { Hidup = false, Semua = false, Kebal = false, Hapus = false }
+
+local function toggleMonButton(btn, key, baseName)
+    monConfig[key] = not monConfig[key]
+    if monConfig[key] then
+        btn.BackgroundColor3 = ThemeMonster.YellowAcc
+        btn.TextColor3 = ThemeMonster.TextDark
+        btn.Text = baseName .. ": ON"
+    else
+        btn.BackgroundColor3 = ThemeMonster.YellowDark
+        btn.TextColor3 = ThemeMonster.TextLight
+        btn.Text = baseName .. ": OFF"
+    end
+end
+
+BtnHidup.MouseButton1Click:Connect(function() toggleMonButton(BtnHidup, "Hidup", "monster hidup") end)
+BtnSemua.MouseButton1Click:Connect(function() toggleMonButton(BtnSemua, "Semua", "tampilkan semua monster") end)
+BtnKebal.MouseButton1Click:Connect(function() toggleMonButton(BtnKebal, "Kebal", "kebal monster") end)
+BtnHapus.MouseButton1Click:Connect(function() toggleMonButton(BtnHapus, "Hapus", "hapus monster") end)
+
+task.spawn(function()
+    while task.wait(0.5) do
+        if not LocalPlayer.Character then continue end
+        
+        if monConfig.Kebal then
+            local hum = LocalPlayer.Character:FindFirstChild("Humanoid")
+            if hum then hum.Name = "GhostMode" end
+        else
+            local ghost = LocalPlayer.Character:FindFirstChild("GhostMode")
+            if ghost then ghost.Name = "Humanoid" end
+        end
+    end
+end)
+
+local gm = getrawmetatable(game)
+if gm then
+    local oldNamecall = gm.__namecall
+    setreadonly(gm, false)
+
+    gm.__namecall = newcclosure(function(self, ...)
+        local method = getnamecallmethod()
+
+        if monConfig.Kebal then
+            if method == "FireServer" then
+                local remoteName = tostring(self)
+                if remoteName:match("Hit") or remoteName:match("Damage") or remoteName:match("Thundermaw") then
+                    return 
+                end
+            end
+        end
+
+        return oldNamecall(self, ...)
+    end)
+    setreadonly(gm, true)
+end
+
+local monsterData = {} 
+local function getRoot(monster)
+    return monster.PrimaryPart or monster:FindFirstChild("HumanoidRootPart") or monster:FindFirstChildWhichIsA("BasePart")
+end
+
+RunService.Heartbeat:Connect(function(deltaTime)
+    local folder = workspace:FindFirstChild("MonsterDrivers")
+    if not folder then return end
+
+    for _, monster in ipairs(folder:GetChildren()) do
+        
+        if monConfig.Hapus then
+            if monster:IsDescendantOf(workspace) then
+                monster:Destroy()
+            end
+            continue
+        end
+
+        local root = getRoot(monster)
+        if not root then continue end
+        
+        if not monsterData[monster] then
+            monsterData[monster] = { LastPos = root.Position, HasMoved = false }
+        end
+        
+        local data = monsterData[monster]
+        local speed = (root.Position - data.LastPos).Magnitude / deltaTime
+        data.LastPos = root.Position
+        
+        if speed > 1.5 then 
+            data.HasMoved = true 
+        end
+        
+        local showText = false
+        local showBox = false
+
+        if monConfig.Hidup and data.HasMoved then showText = true end
+        if monConfig.Semua then
+            if data.HasMoved then showText = true else showBox = true end
+        end
+
+        if showText then
+            if not data.TextESP then
+                local bill = Instance.new("BillboardGui")
+                bill.Size = UDim2.new(0, 200, 0, 40)
+                bill.StudsOffset = Vector3.new(0, 4, 0)
+                bill.AlwaysOnTop = true
+                
+                local txt = Instance.new("TextLabel")
+                txt.Size = UDim2.new(1, 0, 1, 0)
+                txt.BackgroundTransparency = 1
+                txt.Text = "AWAS MONSTER"
+                txt.TextColor3 = ThemeMonster.YellowAcc
+                txt.Font = Enum.Font.GothamBlack
+                txt.TextSize = 16 
+                txt.TextStrokeTransparency = 0.2
+                txt.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                txt.Parent = bill
+                
+                bill.Parent = root
+                data.TextESP = bill
+            end
+        else
+            if data.TextESP then
+                data.TextESP:Destroy()
+                data.TextESP = nil
+            end
+        end
+
+        if showBox then
+            if not data.AestheticBox then
+                local box = Instance.new("SelectionBox")
+                box.Adornee = monster 
+                box.LineThickness = 0.05
+                box.Color3 = ThemeMonster.PinkNeon
+                box.SurfaceColor3 = ThemeMonster.PinkSoft
+                box.SurfaceTransparency = 0.8
+                box.Parent = root
+                data.AestheticBox = box
+            end
+        else
+            if data.AestheticBox then
+                data.AestheticBox:Destroy()
+                data.AestheticBox = nil
+            end
+        end
+    end
+    
+    for m, _ in pairs(monsterData) do
+        if not m.Parent then 
+            if monsterData[m].TextESP then monsterData[m].TextESP:Destroy() end
+            if monsterData[m].AestheticBox then monsterData[m].AestheticBox:Destroy() end
+            monsterData[m] = nil
+        end
+    end
+end)
+
+
+-- ========================================================
+-- 10. LOGIKA MENU PILIHAN UTAMA (DENGAN ANIMASI)
 -- ========================================================
 local menuTerbuka = false
 
@@ -1040,7 +1457,7 @@ MainMenuButton.MouseButton1Click:Connect(function()
     menuTerbuka = not menuTerbuka
     if menuTerbuka then
         SelectionFrame.Visible = true
-        TweenService:Create(SelectionFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0, 160, 0, 185)}):Play()
+        TweenService:Create(SelectionFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0, 160, 0, 220)}):Play()
     else
         TweenService:Create(SelectionFrame, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Size = UDim2.new(0, 160, 0, 0)}):Play()
         task.delay(0.2, function()
@@ -1049,59 +1466,46 @@ MainMenuButton.MouseButton1Click:Connect(function()
     end
 end)
 
-BtnMenuGalian.MouseButton1Click:Connect(function()
+local function HideAllMenus()
     menuTerbuka = false
     SelectionFrame.Size = UDim2.new(0, 160, 0, 0)
     SelectionFrame.Visible = false
+    MenuFrame.Visible = false
     PlayerTeleportFrame.Visible = false
     SpeedFrame.Visible = false
     AmbilItemsFrame.Visible = false
     LangitFrame.Visible = false
+    MonsterFrame.Visible = false
+end
+
+BtnMenuGalian.MouseButton1Click:Connect(function()
+    HideAllMenus()
     MenuFrame.Visible = true
     buildMenuDinamis()
 end)
 
 BtnMenuAmbilItems.MouseButton1Click:Connect(function()
-    menuTerbuka = false
-    SelectionFrame.Size = UDim2.new(0, 160, 0, 0)
-    SelectionFrame.Visible = false
-    MenuFrame.Visible = false
-    PlayerTeleportFrame.Visible = false
-    SpeedFrame.Visible = false
-    LangitFrame.Visible = false
+    HideAllMenus()
     AmbilItemsFrame.Visible = true
 end)
 
 BtnMenuPlayer.MouseButton1Click:Connect(function()
-    menuTerbuka = false
-    SelectionFrame.Size = UDim2.new(0, 160, 0, 0)
-    SelectionFrame.Visible = false
-    MenuFrame.Visible = false
-    SpeedFrame.Visible = false
-    AmbilItemsFrame.Visible = false
-    LangitFrame.Visible = false
+    HideAllMenus()
     PlayerTeleportFrame.Visible = true
     updatePlayerList()
 end)
 
 BtnMenuSpeed.MouseButton1Click:Connect(function()
-    menuTerbuka = false
-    SelectionFrame.Size = UDim2.new(0, 160, 0, 0)
-    SelectionFrame.Visible = false
-    MenuFrame.Visible = false
-    PlayerTeleportFrame.Visible = false
-    AmbilItemsFrame.Visible = false
-    LangitFrame.Visible = false
+    HideAllMenus()
     SpeedFrame.Visible = true
 end)
 
 BtnMenuLangit.MouseButton1Click:Connect(function()
-    menuTerbuka = false
-    SelectionFrame.Size = UDim2.new(0, 160, 0, 0)
-    SelectionFrame.Visible = false
-    MenuFrame.Visible = false
-    PlayerTeleportFrame.Visible = false
-    AmbilItemsFrame.Visible = false
-    SpeedFrame.Visible = false
+    HideAllMenus()
     LangitFrame.Visible = true
+end)
+
+BtnMenuMonster.MouseButton1Click:Connect(function()
+    HideAllMenus()
+    MonsterFrame.Visible = true
 end)
