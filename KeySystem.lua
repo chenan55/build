@@ -4,6 +4,7 @@ local AllowedUsers = {
     ["choraaaaa18"] = true,   
     ["choraaaa18"] = true,
     ["whermyth"] = true,
+    ["sroev9"] = true,
     ["Chee_nan7"] = true
 }
 
