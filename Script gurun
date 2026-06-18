@@ -60,7 +60,7 @@ MainMenuButton.Parent = ScreenGui
 Instance.new("UICorner", MainMenuButton).CornerRadius = UDim.new(0, 8)
 
 -- ========================================================
--- 3. MENU PILIHAN (HUB - DENGAN 6 TOMBOL)
+-- 3. MENU PILIHAN (HUB - DENGAN 7 TOMBOL)
 -- ========================================================
 local SelectionFrame = Instance.new("Frame")
 SelectionFrame.Size = UDim2.new(0, 160, 0, 0)
@@ -121,7 +121,6 @@ BtnMenuLangit.Font = Enum.Font.Ubuntu
 BtnMenuLangit.TextSize = 13
 Instance.new("UICorner", BtnMenuLangit).CornerRadius = UDim.new(0, 6)
 
--- TOMBOL MENU MONSTER BARU
 local BtnMenuMonster = Instance.new("TextButton", SelectionFrame)
 BtnMenuMonster.Size = UDim2.new(1, -10, 0, 30)
 BtnMenuMonster.Position = UDim2.new(0, 5, 0, 180)
@@ -132,25 +131,43 @@ BtnMenuMonster.Font = Enum.Font.Ubuntu
 BtnMenuMonster.TextSize = 13
 Instance.new("UICorner", BtnMenuMonster).CornerRadius = UDim.new(0, 6)
 
--- TULISAN "NEW" BERKEDIP
-local NewLabel = Instance.new("TextLabel", BtnMenuMonster)
-NewLabel.Size = UDim2.new(0, 30, 0, 12)
-NewLabel.Position = UDim2.new(1, -25, 0, -5) -- Di pinggir atas
-NewLabel.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-NewLabel.Text = "NEW"
-NewLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-NewLabel.Font = Enum.Font.GothamBold
-NewLabel.TextSize = 8
-Instance.new("UICorner", NewLabel).CornerRadius = UDim.new(0, 3)
+local BtnMenuPergiKe = Instance.new("TextButton", SelectionFrame)
+BtnMenuPergiKe.Size = UDim2.new(1, -10, 0, 30)
+BtnMenuPergiKe.Position = UDim2.new(0, 5, 0, 215)
+BtnMenuPergiKe.BackgroundColor3 = Color3.fromRGB(255, 215, 0) -- Warna kuning emas
+BtnMenuPergiKe.Text = "pergi ke..?"
+BtnMenuPergiKe.TextColor3 = Color3.fromRGB(255, 255, 255)
+BtnMenuPergiKe.Font = Enum.Font.Ubuntu
+BtnMenuPergiKe.TextSize = 13
+Instance.new("UICorner", BtnMenuPergiKe).CornerRadius = UDim.new(0, 6)
 
--- Animasi Berkedip
+-- TULISAN "NEW" BERKEDIP (MONSTER & PERGI KE)
+local NewLabel1 = Instance.new("TextLabel", BtnMenuMonster)
+NewLabel1.Size = UDim2.new(0, 30, 0, 12)
+NewLabel1.Position = UDim2.new(1, -25, 0, -5)
+NewLabel1.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+NewLabel1.Text = "NEW"
+NewLabel1.TextColor3 = Color3.fromRGB(255, 255, 255)
+NewLabel1.Font = Enum.Font.GothamBold
+NewLabel1.TextSize = 8
+Instance.new("UICorner", NewLabel1).CornerRadius = UDim.new(0, 3)
+
+local NewLabel2 = Instance.new("TextLabel", BtnMenuPergiKe)
+NewLabel2.Size = UDim2.new(0, 30, 0, 12)
+NewLabel2.Position = UDim2.new(1, -25, 0, -5)
+NewLabel2.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+NewLabel2.Text = "NEW"
+NewLabel2.TextColor3 = Color3.fromRGB(255, 255, 255)
+NewLabel2.Font = Enum.Font.GothamBold
+NewLabel2.TextSize = 8
+Instance.new("UICorner", NewLabel2).CornerRadius = UDim.new(0, 3)
+
+-- Animasi Berkedip Bersamaan
 task.spawn(function()
     while task.wait(0.5) do
-        if NewLabel and NewLabel.Parent then
-            NewLabel.BackgroundTransparency = NewLabel.BackgroundTransparency == 0 and 0.5 or 0
-        else
-            break
-        end
+        local state = (NewLabel1.BackgroundTransparency == 0) and 0.5 or 0
+        if NewLabel1 and NewLabel1.Parent then NewLabel1.BackgroundTransparency = state end
+        if NewLabel2 and NewLabel2.Parent then NewLabel2.BackgroundTransparency = state end
     end
 end)
 
@@ -1449,7 +1466,169 @@ end)
 
 
 -- ========================================================
--- 10. LOGIKA MENU PILIHAN UTAMA (DENGAN ANIMASI)
+-- 10. UI SCRIPT 7: PERGI KE..? (TELEPORT LOKASI SPESIFIK)
+-- ========================================================
+local PergiKeFrame = Instance.new("Frame", ScreenGui)
+local PK_originalHeight = 195 
+PergiKeFrame.Size = UDim2.new(0, 190, 0, PK_originalHeight)
+PergiKeFrame.Position = UDim2.new(0.5, -95, 0.5, -95)
+PergiKeFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+PergiKeFrame.Active = true
+PergiKeFrame.Visible = false
+Instance.new("UICorner", PergiKeFrame).CornerRadius = UDim.new(0, 8)
+
+local PK_Stroke = Instance.new("UIStroke", PergiKeFrame)
+PK_Stroke.Color = Color3.fromRGB(255, 215, 0)
+PK_Stroke.Thickness = 2
+
+local PK_Title = Instance.new("TextLabel", PergiKeFrame)
+PK_Title.Size = UDim2.new(1, -55, 0, 28)
+PK_Title.Position = UDim2.new(0, 10, 0, 2)
+PK_Title.Text = "TELEPORT MENU"
+PK_Title.TextColor3 = Color3.fromRGB(204, 163, 0)
+PK_Title.Font = Enum.Font.GothamBold
+PK_Title.TextSize = 11
+PK_Title.BackgroundTransparency = 1
+PK_Title.TextXAlignment = Enum.TextXAlignment.Left
+
+local PK_CloseBtn = Instance.new("TextButton", PergiKeFrame)
+PK_CloseBtn.Size = UDim2.new(0, 18, 0, 18)
+PK_CloseBtn.Position = UDim2.new(1, -24, 0, 6)
+PK_CloseBtn.Text = "X"
+PK_CloseBtn.BackgroundColor3 = Color3.fromRGB(255, 235, 59)
+PK_CloseBtn.TextColor3 = Color3.fromRGB(40, 40, 40)
+PK_CloseBtn.Font = Enum.Font.GothamBold
+PK_CloseBtn.TextSize = 9
+Instance.new("UICorner", PK_CloseBtn).CornerRadius = UDim.new(1, 0)
+PK_CloseBtn.MouseButton1Click:Connect(function() PergiKeFrame.Visible = false end)
+
+local PK_MinBtn = Instance.new("TextButton", PergiKeFrame)
+PK_MinBtn.Size = UDim2.new(0, 18, 0, 18)
+PK_MinBtn.Position = UDim2.new(1, -46, 0, 6)
+PK_MinBtn.Text = "-"
+PK_MinBtn.BackgroundColor3 = Color3.fromRGB(240, 240, 240)
+PK_MinBtn.TextColor3 = Color3.fromRGB(40, 40, 40)
+PK_MinBtn.Font = Enum.Font.GothamBold
+PK_MinBtn.TextSize = 11
+Instance.new("UICorner", PK_MinBtn).CornerRadius = UDim.new(1, 0)
+
+local PK_Container = Instance.new("Frame", PergiKeFrame)
+PK_Container.Size = UDim2.new(0.9, 0, 0.78, 0)
+PK_Container.Position = UDim2.new(0.05, 0, 0.18, 0)
+PK_Container.BackgroundTransparency = 1
+
+local PK_ListLayout = Instance.new("UIListLayout", PK_Container)
+PK_ListLayout.Padding = UDim.new(0, 6)
+PK_ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+local function BuatMenuTeleport(namaMenu, targetPath)
+    local RowFrame = Instance.new("Frame", PK_Container)
+    RowFrame.Size = UDim2.new(1, 0, 0, 26)
+    RowFrame.BackgroundColor3 = Color3.fromRGB(255, 253, 230)
+    Instance.new("UICorner", RowFrame).CornerRadius = UDim.new(0, 4)
+    
+    local rowStroke = Instance.new("UIStroke", RowFrame)
+    rowStroke.Color = Color3.fromRGB(255, 235, 59)
+    rowStroke.Thickness = 0.8
+
+    local Label = Instance.new("TextLabel", RowFrame)
+    Label.Size = UDim2.new(0.65, 0, 1, 0)
+    Label.Position = UDim2.new(0, 6, 0, 0)
+    Label.Text = namaMenu
+    Label.TextColor3 = Color3.fromRGB(60, 60, 60)
+    Label.Font = Enum.Font.GothamMedium
+    Label.TextSize = 10
+    Label.BackgroundTransparency = 1
+    Label.TextXAlignment = Enum.TextXAlignment.Left
+
+    local TeleportBtn = Instance.new("TextButton", RowFrame)
+    TeleportBtn.Size = UDim2.new(0, 48, 0, 16)
+    TeleportBtn.Position = UDim2.new(1, -52, 0.5, -8)
+    TeleportBtn.Text = "teleport"
+    TeleportBtn.BackgroundColor3 = Color3.fromRGB(255, 215, 0)
+    TeleportBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TeleportBtn.Font = Enum.Font.GothamBold
+    TeleportBtn.TextSize = 8
+    Instance.new("UICorner", TeleportBtn).CornerRadius = UDim.new(0, 3)
+
+    TeleportBtn.MouseButton1Click:Connect(function()
+        local char = LocalPlayer.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            local target = targetPath()
+            if target then
+                if target:IsA("Model") then
+                    char.HumanoidRootPart.CFrame = target:GetPivot()
+                elseif target:IsA("BasePart") then
+                    char.HumanoidRootPart.CFrame = target.CFrame * CFrame.new(0, 3, 0)
+                end
+                TeleportBtn.Text = "Sukses!"
+                task.wait(0.8)
+                TeleportBtn.Text = "teleport"
+            else
+                TeleportBtn.Text = "Gagal!"
+                task.wait(0.8)
+                TeleportBtn.Text = "teleport"
+            end
+        end
+    end)
+end
+
+BuatMenuTeleport("otw disko", function()
+    return workspace:FindFirstChild("Club") and workspace.Club:FindFirstChild("Disco3")
+end)
+
+BuatMenuTeleport("depan lift", function()
+    if workspace:FindFirstChild("Metro") and workspace.Metro:FindFirstChild("SCIANY") then
+        return workspace.Metro.SCIANY:GetChildren()[30]
+    end
+    return nil
+end)
+
+BuatMenuTeleport("brankas", function()
+    return workspace:FindFirstChild("FurnitureStore") and workspace.FurnitureStore:FindFirstChild("StorageDeposit")
+end)
+
+BuatMenuTeleport("penjualan", function()
+    return workspace:FindFirstChild("FurnitureStore") and workspace.FurnitureStore:FindFirstChild("StorageDeposit")
+end)
+
+local isPKMinimized = false
+PK_MinBtn.MouseButton1Click:Connect(function()
+    isPKMinimized = not isPKMinimized
+    if isPKMinimized then
+        PergiKeFrame.Size = UDim2.new(0, 190, 0, 32)
+        PK_Container.Visible = false
+        PK_MinBtn.Text = "+"
+    else
+        PergiKeFrame.Size = UDim2.new(0, 190, 0, PK_originalHeight)
+        PK_Container.Visible = true
+        PK_MinBtn.Text = "-"
+    end
+end)
+
+local pkDragging, pkDragInput, pkDragStart, pkStartPos
+PergiKeFrame.InputBegan:Connect(function(input)
+    if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
+        pkDragging = true
+        pkDragStart = input.Position
+        pkStartPos = PergiKeFrame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then pkDragging = false end
+        end)
+    end
+end)
+PergiKeFrame.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then pkDragInput = input end
+end)
+UserInputService.InputChanged:Connect(function(input)
+    if input == pkDragInput and pkDragging then
+        local delta = input.Position - pkDragStart
+        PergiKeFrame.Position = UDim2.new(pkStartPos.X.Scale, pkStartPos.X.Offset + delta.X, pkStartPos.Y.Scale, pkStartPos.Y.Offset + delta.Y)
+    end
+end)
+
+-- ========================================================
+-- 11. LOGIKA MENU PILIHAN UTAMA (DENGAN ANIMASI)
 -- ========================================================
 local menuTerbuka = false
 
@@ -1457,7 +1636,8 @@ MainMenuButton.MouseButton1Click:Connect(function()
     menuTerbuka = not menuTerbuka
     if menuTerbuka then
         SelectionFrame.Visible = true
-        TweenService:Create(SelectionFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0, 160, 0, 220)}):Play()
+        -- Ketinggian frame disesuaikan menjadi 255 agar muat 7 tombol pilihan
+        TweenService:Create(SelectionFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0, 160, 0, 255)}):Play()
     else
         TweenService:Create(SelectionFrame, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Size = UDim2.new(0, 160, 0, 0)}):Play()
         task.delay(0.2, function()
@@ -1476,6 +1656,7 @@ local function HideAllMenus()
     AmbilItemsFrame.Visible = false
     LangitFrame.Visible = false
     MonsterFrame.Visible = false
+    PergiKeFrame.Visible = false
 end
 
 BtnMenuGalian.MouseButton1Click:Connect(function()
@@ -1508,4 +1689,9 @@ end)
 BtnMenuMonster.MouseButton1Click:Connect(function()
     HideAllMenus()
     MonsterFrame.Visible = true
+end)
+
+BtnMenuPergiKe.MouseButton1Click:Connect(function()
+    HideAllMenus()
+    PergiKeFrame.Visible = true
 end)
