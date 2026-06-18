@@ -60,8 +60,7 @@ MainMenuButton.Parent = ScreenGui
 Instance.new("UICorner", MainMenuButton).CornerRadius = UDim.new(0, 8)
 
 -- ========================================================
--- 3. MENU PILIHAN (HUB - DENGAN 7 TOMBOL) 
--- *MODIFIED: SCROLLING FRAME UNTUK 4 MENU*
+-- 3. MENU PILIHAN (HUB - DENGAN 7 TOMBOL & SCROLL HINT) 
 -- ========================================================
 local SelectionFrame = Instance.new("ScrollingFrame")
 SelectionFrame.Size = UDim2.new(0, 160, 0, 0)
@@ -70,7 +69,7 @@ SelectionFrame.BackgroundColor3 = WARNA_BG
 SelectionFrame.Visible = false
 SelectionFrame.ClipsDescendants = true
 SelectionFrame.ScrollBarThickness = 3
-SelectionFrame.CanvasSize = UDim2.new(0, 0, 0, 255) -- Kapasitas scroll untuk 7 tombol
+SelectionFrame.CanvasSize = UDim2.new(0, 0, 0, 255) 
 SelectionFrame.Parent = MainMenuButton
 Instance.new("UICorner", SelectionFrame).CornerRadius = UDim.new(0, 8)
 
@@ -82,6 +81,25 @@ SelectionLayout.SortOrder = Enum.SortOrder.LayoutOrder
 local SelectionPadding = Instance.new("UIPadding", SelectionFrame)
 SelectionPadding.PaddingTop = UDim.new(0, 5)
 SelectionPadding.PaddingBottom = UDim.new(0, 5)
+
+-- INDIKATOR SCROLL KE BAWAH
+local ScrollHint = Instance.new("TextLabel", MainMenuButton)
+ScrollHint.Size = UDim2.new(1, 0, 0, 15)
+ScrollHint.Position = UDim2.new(0, 0, 1, 155) 
+ScrollHint.BackgroundTransparency = 1
+ScrollHint.Text = "↓ scroll ke bawah ↓"
+ScrollHint.TextColor3 = Color3.fromRGB(220, 220, 220)
+ScrollHint.Font = Enum.Font.GothamMedium
+ScrollHint.TextSize = 9
+ScrollHint.Visible = false
+
+task.spawn(function()
+    while task.wait(0.6) do
+        if ScrollHint.Parent then
+            ScrollHint.TextTransparency = (ScrollHint.TextTransparency == 0) and 0.5 or 0
+        end
+    end
+end)
 
 local BtnMenuGalian = Instance.new("TextButton", SelectionFrame)
 BtnMenuGalian.Size = UDim2.new(1, -12, 0, 30)
@@ -153,7 +171,7 @@ BtnMenuPergiKe.TextSize = 13
 BtnMenuPergiKe.LayoutOrder = 7
 Instance.new("UICorner", BtnMenuPergiKe).CornerRadius = UDim.new(0, 6)
 
--- TULISAN "NEW" BERKEDIP (MONSTER & PERGI KE)
+-- TULISAN "NEW" / "NEW UPDATE" BERKEDIP
 local NewLabel1 = Instance.new("TextLabel", BtnMenuMonster)
 NewLabel1.Size = UDim2.new(0, 30, 0, 12)
 NewLabel1.Position = UDim2.new(1, -25, 0, -5)
@@ -174,17 +192,27 @@ NewLabel2.Font = Enum.Font.GothamBold
 NewLabel2.TextSize = 8
 Instance.new("UICorner", NewLabel2).CornerRadius = UDim.new(0, 3)
 
+local NewLabel3 = Instance.new("TextLabel", BtnMenuGalian)
+NewLabel3.Size = UDim2.new(0, 60, 0, 12) -- Lebih lebar untuk teks "New Update"
+NewLabel3.Position = UDim2.new(1, -55, 0, -5)
+NewLabel3.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+NewLabel3.Text = "New Update"
+NewLabel3.TextColor3 = Color3.fromRGB(255, 255, 255)
+NewLabel3.Font = Enum.Font.GothamBold
+NewLabel3.TextSize = 8
+Instance.new("UICorner", NewLabel3).CornerRadius = UDim.new(0, 3)
+
 task.spawn(function()
     while task.wait(0.5) do
         local state = (NewLabel1.BackgroundTransparency == 0) and 0.5 or 0
         if NewLabel1 and NewLabel1.Parent then NewLabel1.BackgroundTransparency = state end
         if NewLabel2 and NewLabel2.Parent then NewLabel2.BackgroundTransparency = state end
+        if NewLabel3 and NewLabel3.Parent then NewLabel3.BackgroundTransparency = state end
     end
 end)
 
 -- ========================================================
 -- 4. UI SCRIPT 1: MENCARI LOKASI ITEMS (GALIAN)
--- *MODIFIED: ALIGNMENT AGAR DROP KE BAWAH*
 -- ========================================================
 local MenuFrame = Instance.new("Frame")
 MenuFrame.Size = UDim2.new(0, 200, 0, 290)
@@ -237,7 +265,7 @@ local DigListLayout = Instance.new("UIListLayout", DigScrollFrame)
 DigListLayout.Padding = UDim.new(0, 3)
 DigListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 DigListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-DigListLayout.VerticalAlignment = Enum.VerticalAlignment.Top -- Pastikan me-render ke bawah
+DigListLayout.VerticalAlignment = Enum.VerticalAlignment.Top
 
 local StatusLabel = Instance.new("TextLabel", MenuFrame)
 StatusLabel.Size = UDim2.new(0.9, 0, 0, 20)
@@ -303,6 +331,7 @@ local KelangkaanData = {
 
 local knownSpots = {}
 local spotCounters = {}
+local expandedCategories = {} 
 
 local function recalculateCanvas()
     DigScrollFrame.CanvasSize = UDim2.new(0, 0, 0, DigListLayout.AbsoluteContentSize.Y + 6)
@@ -343,12 +372,12 @@ local function buildMenuDinamis()
             CategoryGroupFrame.Size = UDim2.new(1, 0, 0, 30)
             CategoryGroupFrame.BackgroundTransparency = 1
             CategoryGroupFrame.LayoutOrder = k.Order
-            CategoryGroupFrame.ClipsDescendants = true -- Agar dropdown turun dgn rapi
+            CategoryGroupFrame.ClipsDescendants = true 
             
             local GroupList = Instance.new("UIListLayout", CategoryGroupFrame)
             GroupList.Padding = UDim.new(0, 3)
             GroupList.HorizontalAlignment = Enum.HorizontalAlignment.Center
-            GroupList.VerticalAlignment = Enum.VerticalAlignment.Top -- Pastikan drag ke bawah
+            GroupList.VerticalAlignment = Enum.VerticalAlignment.Top
 
             local MainCatButton = Instance.new("TextButton", CategoryGroupFrame)
             MainCatButton.Size = UDim2.new(1, -6, 0, 30)
@@ -369,7 +398,7 @@ local function buildMenuDinamis()
             ExpandIndicator.Font = Enum.Font.Ubuntu
             ExpandIndicator.TextSize = 12
 
-            local isExpanded = false
+            local isExpanded = expandedCategories[k.Id] or false 
             local SubFramesList = {}
 
             for _, spotObject in ipairs(galianDitemukan) do
@@ -398,6 +427,10 @@ local function buildMenuDinamis()
                 EyeBtn.Font = Enum.Font.Ubuntu
                 EyeBtn.TextSize = 13
                 Instance.new("UICorner", EyeBtn).CornerRadius = UDim.new(0, 4)
+
+                if TerpilihObject == spotObject then
+                    SubButton.BackgroundColor3 = WARNA_BIRU
+                end
 
                 SubButton.MouseButton1Click:Connect(function()
                     for _, folder in pairs(DigScrollFrame:GetChildren()) do
@@ -441,8 +474,19 @@ local function buildMenuDinamis()
                 end)
             end
 
+            if isExpanded then
+                ExpandIndicator.Text = "[ - ]"
+                CategoryGroupFrame.Size = UDim2.new(1, 0, 0, 30 + (#SubFramesList * 31))
+                for _, f in ipairs(SubFramesList) do f.Visible = true end
+            else
+                ExpandIndicator.Text = "[ + ]"
+                CategoryGroupFrame.Size = UDim2.new(1, 0, 0, 30)
+                for _, f in ipairs(SubFramesList) do f.Visible = false end
+            end
+
             MainCatButton.MouseButton1Click:Connect(function()
                 isExpanded = not isExpanded
+                expandedCategories[k.Id] = isExpanded 
                 if isExpanded then
                     ExpandIndicator.Text = "[ - ]"
                     CategoryGroupFrame.Size = UDim2.new(1, 0, 0, 30 + (#SubFramesList * 31))
@@ -461,15 +505,44 @@ local function buildMenuDinamis()
     recalculateCanvas()
 end
 
+local digUpdateDebounce = false
+local function autoRefreshDigMenu()
+    if MenuFrame.Visible and not digUpdateDebounce then
+        digUpdateDebounce = true
+        task.delay(0.5, function() 
+            if MenuFrame.Visible then
+                buildMenuDinamis()
+            end
+            digUpdateDebounce = false
+        end)
+    end
+end
+
+local digConAdded, digConRemoved
+local function attachDigListener()
+    if digConAdded then digConAdded:Disconnect() end
+    if digConRemoved then digConRemoved:Disconnect() end
+    
+    local folder = workspace:FindFirstChild("DigSpots")
+    if folder then
+        digConAdded = folder.ChildAdded:Connect(autoRefreshDigMenu)
+        digConRemoved = folder.ChildRemoved:Connect(autoRefreshDigMenu)
+    end
+end
+
+workspace.ChildAdded:Connect(function(child)
+    if child.Name == "DigSpots" then
+        attachDigListener()
+        autoRefreshDigMenu()
+    end
+end)
+attachDigListener() 
+
 TeleportButton.MouseButton1Click:Connect(function()
     if TerpilihObject and TerpilihObject.Parent and LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
         local targetPart = TerpilihObject:IsA("BasePart") and TerpilihObject or TerpilihObject:FindFirstChildWhichIsA("BasePart") or TerpilihObject.PrimaryPart
         if targetPart then
             LocalPlayer.Character.HumanoidRootPart.CFrame = targetPart.CFrame * CFrame.new(0, 3, 0)
-            MenuFrame.Visible = false
-            TerpilihObject = nil
-            StatusLabel.Text = "Target: Belum Memilih"
-            StatusLabel.TextColor3 = WARNA_PINK_TUA
             resetCamera() 
         end
     end
@@ -1644,8 +1717,7 @@ UserInputService.InputChanged:Connect(function(input)
 end)
 
 -- ========================================================
--- 11. LOGIKA MENU PILIHAN UTAMA (DENGAN ANIMASI SCROLL)
--- *MODIFIED: ANIMASI SESUAI 4 TOMBOL, LALU MENU TERTENTU TIDAK DIHAPUS SAAT KLIK YANG LAIN*
+-- 11. LOGIKA MENU PILIHAN UTAMA 
 -- ========================================================
 local menuTerbuka = false
 
@@ -1653,9 +1725,10 @@ MainMenuButton.MouseButton1Click:Connect(function()
     menuTerbuka = not menuTerbuka
     if menuTerbuka then
         SelectionFrame.Visible = true
-        -- Ketinggian frame diatur menjadi 145px agar menampung sekitar 4 tombol dengan rapi
+        ScrollHint.Visible = true
         TweenService:Create(SelectionFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0, 160, 0, 145)}):Play()
     else
+        ScrollHint.Visible = false
         TweenService:Create(SelectionFrame, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Size = UDim2.new(0, 160, 0, 0)}):Play()
         task.delay(0.2, function()
             if not menuTerbuka then SelectionFrame.Visible = false end
@@ -1665,11 +1738,9 @@ end)
 
 local function HideAllMenus()
     menuTerbuka = false
+    ScrollHint.Visible = false
     SelectionFrame.Size = UDim2.new(0, 160, 0, 0)
     SelectionFrame.Visible = false
-    -- PENGECUALIAN: Mencari Lokasi Items dan Teleport Ke Player tidak disembunyikan (Bisa Ditimpa)
-    -- MenuFrame.Visible = false 
-    -- PlayerTeleportFrame.Visible = false 
     
     SpeedFrame.Visible = false
     AmbilItemsFrame.Visible = false
@@ -1714,3 +1785,167 @@ BtnMenuPergiKe.MouseButton1Click:Connect(function()
     HideAllMenus()
     PergiKeFrame.Visible = true
 end)
+
+-- ========================================================
+-- 12. FITUR NOTIFIKASI ITEM LANGKA BY CHENAN
+-- ========================================================
+local NotifContainer = Instance.new("Frame")
+NotifContainer.Name = "ChenanNotifContainer"
+-- Posisikan di pojok kanan bawah layar
+NotifContainer.AnchorPoint = Vector2.new(1, 1)
+NotifContainer.Position = UDim2.new(1, -15, 1, -15)
+NotifContainer.Size = UDim2.new(0, 240, 0.7, 0)
+NotifContainer.BackgroundTransparency = 1
+NotifContainer.Parent = ScreenGui
+
+local NotifLayout = Instance.new("UIListLayout", NotifContainer)
+NotifLayout.SortOrder = Enum.SortOrder.LayoutOrder
+NotifLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+NotifLayout.Padding = UDim.new(0, 10)
+
+local notifCounters = {
+    Ancient = 0,
+    Legendary = 0,
+    Epic = 0
+}
+
+local function SpawnNotification(rarity, spotObject)
+    notifCounters[rarity] = notifCounters[rarity] + 1
+    local count = notifCounters[rarity]
+    
+    local msg = ""
+    if count == 1 then
+        msg = "Lokasi " .. rarity .. count .. " telah di temukan\n<font size='10' color='#dcdcdc'>dari chenan</font>"
+    else
+        msg = "Lokasi " .. rarity .. count .. " baru di temukan\n<font size='10' color='#dcdcdc'>dari chenan</font>"
+    end
+    
+    -- Frame Notifikasi Utama (Warna Tosca Transparan)
+    local NotifFrame = Instance.new("Frame")
+    NotifFrame.Size = UDim2.new(1, 0, 0, 85)
+    NotifFrame.BackgroundColor3 = Color3.fromRGB(64, 224, 208) -- Tosca
+    NotifFrame.BackgroundTransparency = 0.35
+    -- Menggunakan tick() agar frame terbaru selalu menumpuk ke atas tanpa menimpa frame lama
+    NotifFrame.LayoutOrder = math.floor(tick() * 1000)
+    NotifFrame.Parent = NotifContainer
+    Instance.new("UICorner", NotifFrame).CornerRadius = UDim.new(0, 8)
+    
+    local NotifStroke = Instance.new("UIStroke", NotifFrame)
+    NotifStroke.Color = Color3.fromRGB(255, 255, 255)
+    NotifStroke.Thickness = 1.5
+    NotifStroke.Transparency = 0.4
+
+    -- Ikon Sesuai Kelangkaan
+    local IconLabel = Instance.new("TextLabel", NotifFrame)
+    IconLabel.Size = UDim2.new(0, 30, 0, 30)
+    IconLabel.Position = UDim2.new(0, 5, 0, 5)
+    IconLabel.BackgroundTransparency = 1
+    IconLabel.Text = (rarity == "Ancient" and "🔱") or (rarity == "Legendary" and "✨") or "⚡"
+    IconLabel.TextSize = 20
+
+    -- Teks Notifikasi
+    local NotifText = Instance.new("TextLabel", NotifFrame)
+    NotifText.Size = UDim2.new(1, -45, 0, 40)
+    NotifText.Position = UDim2.new(0, 40, 0, 5)
+    NotifText.BackgroundTransparency = 1
+    NotifText.RichText = true
+    NotifText.Text = msg
+    NotifText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    NotifText.Font = Enum.Font.GothamBold
+    NotifText.TextSize = 12
+    NotifText.TextWrapped = true
+    NotifText.TextXAlignment = Enum.TextXAlignment.Left
+
+    -- Tombol Tutup X di pojok kanan atas
+    local BtnCloseX = Instance.new("TextButton", NotifFrame)
+    BtnCloseX.Size = UDim2.new(0, 20, 0, 20)
+    BtnCloseX.Position = UDim2.new(1, -25, 0, 5)
+    BtnCloseX.BackgroundTransparency = 1
+    BtnCloseX.Text = "X"
+    BtnCloseX.TextColor3 = Color3.fromRGB(255, 60, 60) -- Warna merah menyala
+    BtnCloseX.Font = Enum.Font.GothamBold
+    BtnCloseX.TextSize = 13
+    
+    BtnCloseX.MouseButton1Click:Connect(function()
+        if NotifFrame then NotifFrame:Destroy() end
+    end)
+    
+    -- Tombol Cancel
+    local BtnCancel = Instance.new("TextButton", NotifFrame)
+    BtnCancel.Size = UDim2.new(0.45, 0, 0, 25)
+    BtnCancel.Position = UDim2.new(0.04, 0, 1, -30)
+    BtnCancel.BackgroundColor3 = Color3.fromRGB(220, 50, 80)
+    BtnCancel.Text = "Cancel"
+    BtnCancel.TextColor3 = Color3.new(1, 1, 1)
+    BtnCancel.Font = Enum.Font.GothamBold
+    BtnCancel.TextSize = 11
+    Instance.new("UICorner", BtnCancel).CornerRadius = UDim.new(0, 5)
+    
+    -- Tombol Teleport
+    local BtnTele = Instance.new("TextButton", NotifFrame)
+    BtnTele.Size = UDim2.new(0.45, 0, 0, 25)
+    BtnTele.Position = UDim2.new(0.51, 0, 1, -30)
+    BtnTele.BackgroundColor3 = Color3.fromRGB(20, 120, 230)
+    BtnTele.Text = "Teleport"
+    BtnTele.TextColor3 = Color3.new(1, 1, 1)
+    BtnTele.Font = Enum.Font.GothamBold
+    BtnTele.TextSize = 11
+    Instance.new("UICorner", BtnTele).CornerRadius = UDim.new(0, 5)
+    
+    -- Fungsi Klik Tombol Bawah
+    BtnCancel.MouseButton1Click:Connect(function()
+        if NotifFrame then NotifFrame:Destroy() end
+    end)
+    
+    BtnTele.MouseButton1Click:Connect(function()
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local targetPart = spotObject:IsA("BasePart") and spotObject or spotObject:FindFirstChildWhichIsA("BasePart") or spotObject.PrimaryPart
+            if targetPart then
+                LocalPlayer.Character.HumanoidRootPart.CFrame = targetPart.CFrame * CFrame.new(0, 3, 0)
+            end
+        end
+        if NotifFrame then NotifFrame:Destroy() end
+    end)
+    
+    -- Notifikasi otomatis hilang setelah 20 detik jika dibiarkan
+    task.delay(20, function()
+        if NotifFrame and NotifFrame.Parent then
+            NotifFrame:Destroy()
+        end
+    end)
+end
+
+local notifiedSpots = {}
+
+local function CheckForRareSpots(spot)
+    if notifiedSpots[spot] then return end
+    notifiedSpots[spot] = true
+    
+    local rarityFound = nil
+    if string.find(spot.Name, "Legendary") then rarityFound = "Legendary"
+    elseif string.find(spot.Name, "Ancient") then rarityFound = "Ancient"
+    elseif string.find(spot.Name, "Epic") then rarityFound = "Epic"
+    end
+    
+    if rarityFound then
+        SpawnNotification(rarityFound, spot)
+    end
+end
+
+local function AttachRareNotifListener()
+    local folder = workspace:FindFirstChild("DigSpots")
+    if folder then
+        for _, spot in pairs(folder:GetChildren()) do
+            CheckForRareSpots(spot)
+        end
+        folder.ChildAdded:Connect(CheckForRareSpots)
+    end
+end
+
+workspace.ChildAdded:Connect(function(child)
+    if child.Name == "DigSpots" then
+        AttachRareNotifListener()
+    end
+end)
+
+AttachRareNotifListener()
