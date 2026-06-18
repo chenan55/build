@@ -60,85 +60,97 @@ MainMenuButton.Parent = ScreenGui
 Instance.new("UICorner", MainMenuButton).CornerRadius = UDim.new(0, 8)
 
 -- ========================================================
--- 3. MENU PILIHAN (HUB - DENGAN 7 TOMBOL)
+-- 3. MENU PILIHAN (HUB - DENGAN 7 TOMBOL) 
+-- *MODIFIED: SCROLLING FRAME UNTUK 4 MENU*
 -- ========================================================
-local SelectionFrame = Instance.new("Frame")
+local SelectionFrame = Instance.new("ScrollingFrame")
 SelectionFrame.Size = UDim2.new(0, 160, 0, 0)
 SelectionFrame.Position = UDim2.new(0, 0, 1, 8)
 SelectionFrame.BackgroundColor3 = WARNA_BG
 SelectionFrame.Visible = false
 SelectionFrame.ClipsDescendants = true
+SelectionFrame.ScrollBarThickness = 3
+SelectionFrame.CanvasSize = UDim2.new(0, 0, 0, 255) -- Kapasitas scroll untuk 7 tombol
 SelectionFrame.Parent = MainMenuButton
 Instance.new("UICorner", SelectionFrame).CornerRadius = UDim.new(0, 8)
 
+local SelectionLayout = Instance.new("UIListLayout", SelectionFrame)
+SelectionLayout.Padding = UDim.new(0, 5)
+SelectionLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+SelectionLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+local SelectionPadding = Instance.new("UIPadding", SelectionFrame)
+SelectionPadding.PaddingTop = UDim.new(0, 5)
+SelectionPadding.PaddingBottom = UDim.new(0, 5)
+
 local BtnMenuGalian = Instance.new("TextButton", SelectionFrame)
-BtnMenuGalian.Size = UDim2.new(1, -10, 0, 30)
-BtnMenuGalian.Position = UDim2.new(0, 5, 0, 5)
+BtnMenuGalian.Size = UDim2.new(1, -12, 0, 30)
 BtnMenuGalian.BackgroundColor3 = WARNA_PINK_TUA
 BtnMenuGalian.Text = "Mencari Lokasi Items"
 BtnMenuGalian.TextColor3 = Color3.fromRGB(255, 255, 255)
 BtnMenuGalian.Font = Enum.Font.Ubuntu
 BtnMenuGalian.TextSize = 13
+BtnMenuGalian.LayoutOrder = 1
 Instance.new("UICorner", BtnMenuGalian).CornerRadius = UDim.new(0, 6)
 
 local BtnMenuAmbilItems = Instance.new("TextButton", SelectionFrame)
-BtnMenuAmbilItems.Size = UDim2.new(1, -10, 0, 30)
-BtnMenuAmbilItems.Position = UDim2.new(0, 5, 0, 40)
+BtnMenuAmbilItems.Size = UDim2.new(1, -12, 0, 30)
 BtnMenuAmbilItems.BackgroundColor3 = TOSCA
 BtnMenuAmbilItems.Text = "Ambil Items"
 BtnMenuAmbilItems.TextColor3 = Color3.fromRGB(20, 50, 50)
 BtnMenuAmbilItems.Font = Enum.Font.Ubuntu
 BtnMenuAmbilItems.TextSize = 13
+BtnMenuAmbilItems.LayoutOrder = 2
 Instance.new("UICorner", BtnMenuAmbilItems).CornerRadius = UDim.new(0, 6)
 
 local BtnMenuPlayer = Instance.new("TextButton", SelectionFrame)
-BtnMenuPlayer.Size = UDim2.new(1, -10, 0, 30)
-BtnMenuPlayer.Position = UDim2.new(0, 5, 0, 75)
+BtnMenuPlayer.Size = UDim2.new(1, -12, 0, 30)
 BtnMenuPlayer.BackgroundColor3 = WARNA_BIRU
 BtnMenuPlayer.Text = "Teleport Ke Player"
 BtnMenuPlayer.TextColor3 = Color3.fromRGB(255, 255, 255)
 BtnMenuPlayer.Font = Enum.Font.Ubuntu
 BtnMenuPlayer.TextSize = 13
+BtnMenuPlayer.LayoutOrder = 3
 Instance.new("UICorner", BtnMenuPlayer).CornerRadius = UDim.new(0, 6)
 
 local BtnMenuSpeed = Instance.new("TextButton", SelectionFrame)
-BtnMenuSpeed.Size = UDim2.new(1, -10, 0, 30)
-BtnMenuSpeed.Position = UDim2.new(0, 5, 0, 110)
+BtnMenuSpeed.Size = UDim2.new(1, -12, 0, 30)
 BtnMenuSpeed.BackgroundColor3 = WARNA_UNGU
 BtnMenuSpeed.Text = "Speed Player"
 BtnMenuSpeed.TextColor3 = Color3.fromRGB(255, 255, 255)
 BtnMenuSpeed.Font = Enum.Font.Ubuntu
 BtnMenuSpeed.TextSize = 13
+BtnMenuSpeed.LayoutOrder = 4
 Instance.new("UICorner", BtnMenuSpeed).CornerRadius = UDim.new(0, 6)
 
 local BtnMenuLangit = Instance.new("TextButton", SelectionFrame)
-BtnMenuLangit.Size = UDim2.new(1, -10, 0, 30)
-BtnMenuLangit.Position = UDim2.new(0, 5, 0, 145)
+BtnMenuLangit.Size = UDim2.new(1, -12, 0, 30)
 BtnMenuLangit.BackgroundColor3 = Color3.fromRGB(255, 165, 0)
 BtnMenuLangit.Text = "langit cerah☀️"
 BtnMenuLangit.TextColor3 = Color3.fromRGB(255, 255, 255)
 BtnMenuLangit.Font = Enum.Font.Ubuntu
 BtnMenuLangit.TextSize = 13
+BtnMenuLangit.LayoutOrder = 5
 Instance.new("UICorner", BtnMenuLangit).CornerRadius = UDim.new(0, 6)
 
 local BtnMenuMonster = Instance.new("TextButton", SelectionFrame)
-BtnMenuMonster.Size = UDim2.new(1, -10, 0, 30)
-BtnMenuMonster.Position = UDim2.new(0, 5, 0, 180)
+BtnMenuMonster.Size = UDim2.new(1, -12, 0, 30)
 BtnMenuMonster.BackgroundColor3 = ThemeMonster.ToscaDark
 BtnMenuMonster.Text = "menu monster"
 BtnMenuMonster.TextColor3 = ThemeMonster.YellowAcc
 BtnMenuMonster.Font = Enum.Font.Ubuntu
 BtnMenuMonster.TextSize = 13
+BtnMenuMonster.LayoutOrder = 6
 Instance.new("UICorner", BtnMenuMonster).CornerRadius = UDim.new(0, 6)
 
 local BtnMenuPergiKe = Instance.new("TextButton", SelectionFrame)
-BtnMenuPergiKe.Size = UDim2.new(1, -10, 0, 30)
-BtnMenuPergiKe.Position = UDim2.new(0, 5, 0, 215)
-BtnMenuPergiKe.BackgroundColor3 = Color3.fromRGB(255, 215, 0) -- Warna kuning emas
+BtnMenuPergiKe.Size = UDim2.new(1, -12, 0, 30)
+BtnMenuPergiKe.BackgroundColor3 = Color3.fromRGB(255, 215, 0) 
 BtnMenuPergiKe.Text = "pergi ke..?"
 BtnMenuPergiKe.TextColor3 = Color3.fromRGB(255, 255, 255)
 BtnMenuPergiKe.Font = Enum.Font.Ubuntu
 BtnMenuPergiKe.TextSize = 13
+BtnMenuPergiKe.LayoutOrder = 7
 Instance.new("UICorner", BtnMenuPergiKe).CornerRadius = UDim.new(0, 6)
 
 -- TULISAN "NEW" BERKEDIP (MONSTER & PERGI KE)
@@ -162,7 +174,6 @@ NewLabel2.Font = Enum.Font.GothamBold
 NewLabel2.TextSize = 8
 Instance.new("UICorner", NewLabel2).CornerRadius = UDim.new(0, 3)
 
--- Animasi Berkedip Bersamaan
 task.spawn(function()
     while task.wait(0.5) do
         local state = (NewLabel1.BackgroundTransparency == 0) and 0.5 or 0
@@ -173,6 +184,7 @@ end)
 
 -- ========================================================
 -- 4. UI SCRIPT 1: MENCARI LOKASI ITEMS (GALIAN)
+-- *MODIFIED: ALIGNMENT AGAR DROP KE BAWAH*
 -- ========================================================
 local MenuFrame = Instance.new("Frame")
 MenuFrame.Size = UDim2.new(0, 200, 0, 290)
@@ -220,10 +232,12 @@ DigScrollFrame.Position = UDim2.new(0.04, 0, 0.13, 0)
 DigScrollFrame.BackgroundTransparency = 1
 DigScrollFrame.BorderSizePixel = 0
 DigScrollFrame.ScrollBarThickness = 4
+
 local DigListLayout = Instance.new("UIListLayout", DigScrollFrame)
 DigListLayout.Padding = UDim.new(0, 3)
 DigListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 DigListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+DigListLayout.VerticalAlignment = Enum.VerticalAlignment.Top -- Pastikan me-render ke bawah
 
 local StatusLabel = Instance.new("TextLabel", MenuFrame)
 StatusLabel.Size = UDim2.new(0.9, 0, 0, 20)
@@ -329,10 +343,12 @@ local function buildMenuDinamis()
             CategoryGroupFrame.Size = UDim2.new(1, 0, 0, 30)
             CategoryGroupFrame.BackgroundTransparency = 1
             CategoryGroupFrame.LayoutOrder = k.Order
+            CategoryGroupFrame.ClipsDescendants = true -- Agar dropdown turun dgn rapi
             
             local GroupList = Instance.new("UIListLayout", CategoryGroupFrame)
             GroupList.Padding = UDim.new(0, 3)
             GroupList.HorizontalAlignment = Enum.HorizontalAlignment.Center
+            GroupList.VerticalAlignment = Enum.VerticalAlignment.Top -- Pastikan drag ke bawah
 
             local MainCatButton = Instance.new("TextButton", CategoryGroupFrame)
             MainCatButton.Size = UDim2.new(1, -6, 0, 30)
@@ -1628,7 +1644,8 @@ UserInputService.InputChanged:Connect(function(input)
 end)
 
 -- ========================================================
--- 11. LOGIKA MENU PILIHAN UTAMA (DENGAN ANIMASI)
+-- 11. LOGIKA MENU PILIHAN UTAMA (DENGAN ANIMASI SCROLL)
+-- *MODIFIED: ANIMASI SESUAI 4 TOMBOL, LALU MENU TERTENTU TIDAK DIHAPUS SAAT KLIK YANG LAIN*
 -- ========================================================
 local menuTerbuka = false
 
@@ -1636,8 +1653,8 @@ MainMenuButton.MouseButton1Click:Connect(function()
     menuTerbuka = not menuTerbuka
     if menuTerbuka then
         SelectionFrame.Visible = true
-        -- Ketinggian frame disesuaikan menjadi 255 agar muat 7 tombol pilihan
-        TweenService:Create(SelectionFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0, 160, 0, 255)}):Play()
+        -- Ketinggian frame diatur menjadi 145px agar menampung sekitar 4 tombol dengan rapi
+        TweenService:Create(SelectionFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(0, 160, 0, 145)}):Play()
     else
         TweenService:Create(SelectionFrame, TweenInfo.new(0.2, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Size = UDim2.new(0, 160, 0, 0)}):Play()
         task.delay(0.2, function()
@@ -1650,8 +1667,10 @@ local function HideAllMenus()
     menuTerbuka = false
     SelectionFrame.Size = UDim2.new(0, 160, 0, 0)
     SelectionFrame.Visible = false
-    MenuFrame.Visible = false
-    PlayerTeleportFrame.Visible = false
+    -- PENGECUALIAN: Mencari Lokasi Items dan Teleport Ke Player tidak disembunyikan (Bisa Ditimpa)
+    -- MenuFrame.Visible = false 
+    -- PlayerTeleportFrame.Visible = false 
+    
     SpeedFrame.Visible = false
     AmbilItemsFrame.Visible = false
     LangitFrame.Visible = false
