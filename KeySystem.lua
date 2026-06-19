@@ -6,8 +6,8 @@ local AllowedUsers = {
     ["whermyth"] = true,
     ["sroev9"] = true,
     ["Chee_nan7"] = true,
-    ["Senja_Aurora26"] = true
-    ["Littleikaaa"] = true
+    ["Senja_Aurora26"] = true,
+    ["Littleikaaa"] = true,
     ["cikiii_28"] = true
 }
 
